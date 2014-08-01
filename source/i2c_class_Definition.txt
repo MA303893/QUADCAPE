@@ -1,0 +1,113 @@
+import led
+	led.init()
+	led.gauge("00000")
+	led.back("0000")
+	led.right("00")
+	led.left("00")
+import telemetry
+	telemetry.init()
+	telemetry.batt()
+	telemetry.aquire_current()
+	telemetry.ina_br
+	telemetry.ina_fr
+	telemetry.ina_fl
+	telemetry.ina_bl
+	
+	
+import i2c
+class i2c.compass(sample,rate,gain_range,highspeed,bias,mode):
+	#sample1,2,4,8 
+	#rate from set_output_rate_mode    
+	#gain_range in gauss
+	#highspeed 1 for i2c highspeed
+	#bias mode from set_measurement_mode
+	#mode #"CONT","SING","IDLE"
+	i2c.compass.set_samples_averaged(self,samples)
+		#accepts 1,2,4,8 samples to average
+	i2c.compass.set_output_rate_mode(self,rate)
+		#0= 0.75HZ,1=1.5HZ,2=3HZ,3=7.5HZ,4=15HZdefault,5=30HZ,6=75HZ,7=reserved
+	i2c.compass.set_measurement_mode(self,mode)
+		#0=normal,1=positive bias,2=negative bias,3=reserved
+	i2c.compass.set_gain_range(self,gauss)
+		#range in gauss
+	i2c.compass.enable_i2c_highspeed(self)
+	i2c.compass.disable_i2c_highspeed(self)
+		#for i2c highspeed mode
+	i2c.compass.set_operating_mode(self,str):
+	i2c.compass.get_operating_mode(self)
+		#str="CONT","SING","IDLE"
+	i2c.compass.get_x(self)	
+	i2c.compass.get_y(self)	
+	i2c.compass.get_z(self)	
+	i2c.compass.get(self)
+		#returns x,y,z
+	i2c.compass.get_ID(self)	
+	i2c.compass.data_locked(self)
+		#returns 1 if data is currently locked due to insufficient reads
+	i2c.compass.RDY(self)
+		#read DRDY register
+	i2c.compass.get_DRDY(self)
+		#read DRDY gpio
+	i2c.compass.GAIN
+		#current gain setting
+	i2c.HMC5883L
+		#current adafruit i2c object
+
+class i2c.gyro()
+	i2c.gyro.ITG3205
+		#current Adafruit_I2C object
+	i2c.gyro.verify(self):
+		#returns true if who_am_i reg successfully read
+	i2c.gyro.sample_rate_divider(self,frequency):
+		#input a frequency in Hz, will modify output rate. 
+		#return -1 if invalid freq and does not modify register
+	i2c.gyro.set_full_scale(self):
+		#call this to initialize proper behavior
+	i2c.gyro.set_dlpf(self,mode):
+		#set Digital low pass filter 
+		#0 256Hz,1 188Hz,2 98Hz,3 42Hz,4 20Hz,5 10Hz,6 5Hz
+	i2c.gyro.int_actl(self,mode):
+		#mode=1 for active low interrupt
+	i2c.gyro.int_open(self,mode):
+		#mode=1 for open drain interrupt
+	i2c.gyro.int_latch(self,mode):
+		#mode=1 for latch until cleared, mode=0 for latch for 50ms
+	i2c.gyro.int_anyrd(self,mode):
+		#mode=1 any read clears int, mode=0 only status reg read clears
+	i2c.gyro.int_rdy_en(self,mode):
+		#mode=1 rdy_en int enabled
+	i2c.gyro.int_raw_en(self,mode):
+		#mode=1 raw_rdy_en int enabled
+	i2c.gyro.int_itgrdy_rawrdy(self):
+		#returns itgrdy,rawrdy
+	i2c.gyro.get(self):
+		#returns x,y,z,temp
+	i2c.gyro.reset(self):
+		#will reset all regs
+	i2c.gyro.sleep(self):
+		#low power mode
+	i2c.gyro.awake(self):
+		#exit sleep/low power mode
+	i2c.gyro.stby_x(self,sleep):
+	i2c.gyro.stby_y(self,sleep):
+	i2c.gyro.stby_z(self,sleep):
+		#set 1 to stdby each channel
+	i2c.gyro.set_clk_mode(self,mode):
+	i2c.gyro.int_pin(self)
+		#true/false on interrupt pin
+		
+		
+		
+		print repr(px).rjust(2), repr(py).rjust(3),print repr(pz).rjust(4)
+		
+while True:
+	x,y,z,t=g.get()
+	px=p.update(x)
+	py=pp.update(y)
+	pz=ppp.update(z)
+	print '---------------------------------------------------'
+	print repr(x).rjust(2), repr(px).rjust(3)
+	time.sleep(1/6.)
+
+
+

@@ -1,0 +1,48 @@
+Change Component Designator: OldDesignator=D11 NewDesignator=D16
+Change Component Designator: OldDesignator=D12 NewDesignator=D17
+Change Component Designator: OldDesignator=D13 NewDesignator=D18
+Change Component Designator: OldDesignator=RD9 NewDesignator=RD14
+Change Component Designator: OldDesignator=RD10 NewDesignator=RD15
+Added Component: Designator=D11(WL-SMCW_YELLOW)
+Added Component: Designator=D12(WL-SMCW_YELLOW)
+Added Component: Designator=D13(WL-SMCW_YELLOW)
+Added Component: Designator=D14(WL-SMCW_YELLOW)
+Added Component: Designator=D15(WL-SMCW_YELLOW)
+Added Component: Designator=RD9(0603)
+Added Component: Designator=RD10(0603)
+Added Component: Designator=RD11(0603)
+Added Component: Designator=RD12(0603)
+Added Component: Designator=RD13(0603)
+Added Pin To Net: NetName=GND Pin=RD9-2
+Added Pin To Net: NetName=GND Pin=RD10-2
+Added Pin To Net: NetName=GND Pin=RD11-2
+Added Pin To Net: NetName=GND Pin=RD12-2
+Added Pin To Net: NetName=GND Pin=RD13-2
+Change Net Name : Old Net Name=NetD11_2 New Net Name=NetD16_2
+Change Net Name : Old Net Name=NetD12_1 New Net Name=NetD17_1
+Change Net Name : Old Net Name=NetD13_1 New Net Name=NetD18_1
+Added Pin To Net: NetName=NetD11_1 Pin=D11-1
+Added Pin To Net: NetName=NetD11_1 Pin=RD9-1
+Added Net: Name=NetD11_1
+Added Pin To Net: NetName=NetD12_1 Pin=D12-1
+Added Pin To Net: NetName=NetD12_1 Pin=RD10-1
+Added Net: Name=NetD12_1
+Added Pin To Net: NetName=NetD13_1 Pin=D13-1
+Added Pin To Net: NetName=NetD13_1 Pin=RD11-1
+Added Net: Name=NetD13_1
+Added Pin To Net: NetName=NetD14_1 Pin=D14-1
+Added Pin To Net: NetName=NetD14_1 Pin=RD12-1
+Added Net: Name=NetD14_1
+Added Pin To Net: NetName=NetD15_1 Pin=D15-1
+Added Pin To Net: NetName=NetD15_1 Pin=RD13-1
+Added Net: Name=NetD15_1
+Added Pin To Net: NetName=OUT_LED9 Pin=D11-2
+Added Net: Name=OUT_LED9
+Added Pin To Net: NetName=OUT_LED10 Pin=D12-2
+Added Net: Name=OUT_LED10
+Added Pin To Net: NetName=OUT_LED11 Pin=D13-2
+Added Net: Name=OUT_LED11
+Added Pin To Net: NetName=OUT_LED12 Pin=D14-2
+Added Net: Name=OUT_LED12
+Added Pin To Net: NetName=OUT_LED13 Pin=D15-2
+Added Net: Name=OUT_LED13

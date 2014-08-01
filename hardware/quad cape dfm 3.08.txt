@@ -1,0 +1,98 @@
+
+Thanks for uploading your files to FreeDFM.com. We are now analyzing your files, and you should expect your pcb file results to be emailed to you from results@4pcb.com in approximately 30 minutes.
+
+If you do not get an email from us with your FreeDFM results, please feel free to email us at freedfm@4pcb.com or call us at 1-800-979-4722 ext. 1666. We are here to take your call Monday-Friday 7:00 AM - 7:00 PM MT. You may upload your files to FreeDFM.com 24 Hours a Day, 7 Days a Week.
+
+
+FreeDFM Quote Info:
+
+Your FreeDFM Quote # is: 3881374
+Your FreeDFM Part # is: 1
+
+Upload Date and Time: 7/15/2014 2:32:05 PM
+
+Note: Please retain the above information for your records and tracking purposes.
+
+
+FreeDFM Board Specifications:
+Material Type: 
+Finish Plating: 
+X Dimension: 
+Outer Copper Wt: 
+Castellated Holes: 
+Solder Mask Sides: 
+Silkscreen Sides: 
+Tab Route: 
+Plated Slots: 
+Controlled Impedance: 
+Gold Fingers: 
+CounterSink: 
+# Plated CounterSinks: 
+# Non-Plated CounterSinks: 
+Certification: 
+Via-In-Pad: 
+Microvias: 
+FR4
+Lead Free Solder
+3.745"
+1 oz
+No
+Both Sides
+Both Sides
+No
+No
+No
+None
+No
+0
+0
+IPC Class 2
+None
+None
+Layer Count: 
+Material Thickness: 
+Y Dimension: 
+Inner Copper Wt: 
+Min. Castellated Hole Size: 
+Solder Mask Color: 
+Silkscreen Color: 
+Scoring: 
+Plated Edges: 
+Controlled Dielectric: 
+ITAR: 
+CounterBore: 
+# Plated CounterBores: 
+# Non-Plated CounterBores: 
+AS9100: 
+Blind/Buried Vias: 
+Soldermask Plugged Vias: 
+4
+0.062"
+4.475"
+1 oz
+0
+Black
+White
+No
+No
+No
+No
+No
+0
+0
+No
+None
+No
+
+Filename Mapping:
+drp = QuadCape_4L_PCB.DRL
+l2 = QuadCape_4L_PCB.G1
+l3 = QuadCape_4L_PCB.G2
+lb = QuadCape_4L_PCB.GBL
+s2 = QuadCape_4L_PCB.GBO
+m2 = QuadCape_4L_PCB.GBS
+d1 = QuadCape_4L_PCB.GKO
+l1 = QuadCape_4L_PCB.GTL
+s1 = QuadCape_4L_PCB.GTO
+m1 = QuadCape_4L_PCB.GTS
+Original.zip = quad cape fabrication outputs 3.08.zip

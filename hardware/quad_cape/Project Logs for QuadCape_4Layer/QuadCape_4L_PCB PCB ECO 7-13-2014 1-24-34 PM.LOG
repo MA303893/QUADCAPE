@@ -1,0 +1,80 @@
+Removed Pin From Net: NetName=NetD8_1 Pin=D8-1
+Removed Pin From Net: NetName=OUT_LED5 Pin=D8-2
+Removed Pin From Net: NetName=GND Pin=D10-1
+Removed Pin From Net: NetName=NetD10_2 Pin=D10-2
+Removed Pin From Net: NetName=NetD11_1 Pin=D11-1
+Removed Pin From Net: NetName=OUT_LED1 Pin=D11-2
+Removed Pin From Net: NetName=NetD12_1 Pin=D12-1
+Removed Pin From Net: NetName=OUT_LED2 Pin=D12-2
+Removed Pin From Net: NetName=NetD13_1 Pin=D13-1
+Removed Pin From Net: NetName=OUT_LED3 Pin=D13-2
+Removed Pin From Net: NetName=NetD14_1 Pin=D14-1
+Removed Pin From Net: NetName=OUT_LED4 Pin=D14-2
+Removed Pin From Net: NetName=VDD_5V Pin=D17-1
+Removed Pin From Net: NetName=NetD17_2 Pin=D17-2
+Removed Pin From Net: NetName=AIN4 Pin=INA2-6
+Removed Pin From Net: NetName=ESC_2 Pin=INA3-5
+Removed Pin From Net: NetName=AIN2 Pin=INA3-6
+Removed Pin From Net: NetName=NetD11_1 Pin=RD9-1
+Removed Pin From Net: NetName=GND Pin=RD9-2
+Removed Pin From Net: NetName=NetD12_1 Pin=RD10-1
+Removed Pin From Net: NetName=GND Pin=RD10-2
+Removed Pin From Net: NetName=NetD13_1 Pin=RD11-1
+Removed Pin From Net: NetName=GND Pin=RD11-2
+Removed Pin From Net: NetName=NetD14_1 Pin=RD12-1
+Removed Pin From Net: NetName=GND Pin=RD12-2
+Removed Pin From Net: NetName=NetR8_2 Pin=U5-1
+Removed Pin From Net: NetName=GND Pin=U5-2
+Removed Pin From Net: NetName=UART5_TXD Pin=U5-3
+Removed Pin From Net: NetName=NetR7_2 Pin=U5-4
+Removed Pin From Net: NetName=VDD_5V Pin=U5-5
+Change Component Designator: OldDesignator=TP_batt1 NewDesignator=TP_batt
+Change Component Designator: OldDesignator=TP_esc2 NewDesignator=TP_esc3
+Change Component Designator: OldDesignator=TP_esc3 NewDesignator=TP_esc2
+Added Component: Designator=D8(WL-SMCW_YELLOW)
+Added Component: Designator=D10(WL-SMCW_YELLOW)
+Added Component: Designator=D11(WL-SMCW_YELLOW)
+Added Component: Designator=D12(WL-SMCW_YELLOW)
+Added Component: Designator=D13(WL-SMCW_YELLOW)
+Added Component: Designator=D14(WL-SMCW_YELLOW)
+Added Component: Designator=D17(SMC)
+Added Component: Designator=RD9(0603)
+Added Component: Designator=RD10(0603)
+Added Component: Designator=RD11(0603)
+Added Component: Designator=RD12(0603)
+Added Component: Designator=U5(DBV0005A_N)
+Added Pin To Net: NetName=NetD8_1 Pin=D8-1
+Added Pin To Net: NetName=OUT_LED5 Pin=D8-2
+Added Pin To Net: NetName=GND Pin=D10-1
+Added Pin To Net: NetName=NetD10_2 Pin=D10-2
+Added Pin To Net: NetName=NetD11_1 Pin=D11-1
+Added Pin To Net: NetName=OUT_LED1 Pin=D11-2
+Added Pin To Net: NetName=NetD12_1 Pin=D12-1
+Added Pin To Net: NetName=OUT_LED2 Pin=D12-2
+Added Pin To Net: NetName=NetD13_1 Pin=D13-1
+Added Pin To Net: NetName=OUT_LED3 Pin=D13-2
+Added Pin To Net: NetName=NetD14_1 Pin=D14-1
+Added Pin To Net: NetName=OUT_LED4 Pin=D14-2
+Added Pin To Net: NetName=VDD_5V Pin=D17-1
+Added Pin To Net: NetName=NetD17_2 Pin=D17-2
+Added Pin To Net: NetName=ESC_2 Pin=INA2-5
+Added Pin To Net: NetName=AIN2 Pin=INA2-6
+Added Pin To Net: NetName=AIN4 Pin=INA3-6
+Added Pin To Net: NetName=NetD11_1 Pin=RD9-1
+Added Pin To Net: NetName=GND Pin=RD9-2
+Added Pin To Net: NetName=NetD12_1 Pin=RD10-1
+Added Pin To Net: NetName=GND Pin=RD10-2
+Added Pin To Net: NetName=NetD13_1 Pin=RD11-1
+Added Pin To Net: NetName=GND Pin=RD11-2
+Added Pin To Net: NetName=NetD14_1 Pin=RD12-1
+Added Pin To Net: NetName=GND Pin=RD12-2
+Added Pin To Net: NetName=NetR8_2 Pin=U5-1
+Added Pin To Net: NetName=GND Pin=U5-2
+Added Pin To Net: NetName=UART5_TXD Pin=U5-3
+Added Pin To Net: NetName=NetR7_2 Pin=U5-4
+Added Pin To Net: NetName=VDD_5V Pin=U5-5
+Change Net Name : Old Net Name=ESC_3 New Net Name=ESC_4
+Added Pin To Net: NetName=ESC_3 Pin=INA3-5
+Added Pin To Net: NetName=ESC_3 Pin=R13-1
+Added Pin To Net: NetName=ESC_3 Pin=TP_esc3-1
+Added Net: Name=ESC_3

@@ -1,0 +1,80 @@
+Removed Pin From Net: NetName=GND Pin=D9-1
+Removed Pin From Net: NetName=NetD9_2 Pin=D9-2
+Removed Pin From Net: NetName=NetD10_1 Pin=D10-1
+Removed Pin From Net: NetName=OUT_LED1 Pin=D10-2
+Removed Pin From Net: NetName=NetD11_1 Pin=D11-1
+Removed Pin From Net: NetName=OUT_LED2 Pin=D11-2
+Removed Pin From Net: NetName=NetD12_1 Pin=D12-1
+Removed Pin From Net: NetName=OUT_LED3 Pin=D12-2
+Removed Pin From Net: NetName=NetD13_1 Pin=D13-1
+Removed Pin From Net: NetName=OUT_LED4 Pin=D13-2
+Removed Pin From Net: NetName=VDD_5V Pin=D16-1
+Removed Pin From Net: NetName=NetD16_2 Pin=D16-2
+Removed Pin From Net: NetName=NetD10_1 Pin=RD9-1
+Removed Pin From Net: NetName=GND Pin=RD9-2
+Removed Pin From Net: NetName=NetD11_1 Pin=RD10-1
+Removed Pin From Net: NetName=GND Pin=RD10-2
+Removed Pin From Net: NetName=NetD12_1 Pin=RD11-1
+Removed Pin From Net: NetName=GND Pin=RD11-2
+Removed Pin From Net: NetName=NetD13_1 Pin=RD12-1
+Removed Pin From Net: NetName=GND Pin=RD12-2
+Removed Pin From Net: NetName=ESC_4 Pin=TP3-1
+Removed Pin From Net: NetName=ESC_2 Pin=TP4-1
+Removed Pin From Net: NetName=ESC_3 Pin=TP5-1
+Removed Pin From Net: NetName=DC_3.3V Pin=U6-2
+Removed Pin From Net: NetName=GND Pin=U6-3
+Removed Pin From Net: NetName=I2C1_SCL Pin=U6-4
+Removed Pin From Net: NetName=I2C1_SDA Pin=U6-5
+Removed Pin From Net: NetName=GPIO1_30 Pin=U6-6
+Removed Pin From Net: NetName=GPIO1_4 Pin=U6-7
+Removed Pin From Net: NetName=GPIO1_0 Pin=U6-8
+Removed Pin From Net: NetName=GPIO2_22 Pin=U6-9
+Removed Pin From Net: NetName=GPIO2_23 Pin=U6-10
+Change Component Designator: OldDesignator=TP1 NewDesignator=TP_batt
+Change Component Designator: OldDesignator=TP2 NewDesignator=TP_esc1
+Added Component: Designator=D9(WL-SMCW_YELLOW)
+Added Component: Designator=D10(WL-SMCW_YELLOW)
+Added Component: Designator=D11(WL-SMCW_YELLOW)
+Added Component: Designator=D12(WL-SMCW_YELLOW)
+Added Component: Designator=D13(WL-SMCW_YELLOW)
+Added Component: Designator=D16(SMC)
+Added Component: Designator=RD9(0603)
+Added Component: Designator=RD10(0603)
+Added Component: Designator=RD11(0603)
+Added Component: Designator=RD12(0603)
+Added Component: Designator=TP_esc2(TESTPOINT)
+Added Component: Designator=TP_esc3(TESTPOINT)
+Added Component: Designator=TP_esc4(TESTPOINT)
+Added Component: Designator=U6(IMU_10DOF)
+Added Pin To Net: NetName=GND Pin=D9-1
+Added Pin To Net: NetName=NetD9_2 Pin=D9-2
+Added Pin To Net: NetName=NetD10_1 Pin=D10-1
+Added Pin To Net: NetName=OUT_LED1 Pin=D10-2
+Added Pin To Net: NetName=NetD11_1 Pin=D11-1
+Added Pin To Net: NetName=OUT_LED2 Pin=D11-2
+Added Pin To Net: NetName=NetD12_1 Pin=D12-1
+Added Pin To Net: NetName=OUT_LED3 Pin=D12-2
+Added Pin To Net: NetName=NetD13_1 Pin=D13-1
+Added Pin To Net: NetName=OUT_LED4 Pin=D13-2
+Added Pin To Net: NetName=VDD_5V Pin=D16-1
+Added Pin To Net: NetName=NetD16_2 Pin=D16-2
+Added Pin To Net: NetName=NetD10_1 Pin=RD9-1
+Added Pin To Net: NetName=GND Pin=RD9-2
+Added Pin To Net: NetName=NetD11_1 Pin=RD10-1
+Added Pin To Net: NetName=GND Pin=RD10-2
+Added Pin To Net: NetName=NetD12_1 Pin=RD11-1
+Added Pin To Net: NetName=GND Pin=RD11-2
+Added Pin To Net: NetName=NetD13_1 Pin=RD12-1
+Added Pin To Net: NetName=GND Pin=RD12-2
+Added Pin To Net: NetName=ESC_2 Pin=TP_esc2-1
+Added Pin To Net: NetName=ESC_3 Pin=TP_esc3-1
+Added Pin To Net: NetName=ESC_4 Pin=TP_esc4-1
+Added Pin To Net: NetName=DC_3.3V Pin=U6-2
+Added Pin To Net: NetName=GND Pin=U6-3
+Added Pin To Net: NetName=I2C1_SCL Pin=U6-4
+Added Pin To Net: NetName=I2C1_SDA Pin=U6-5
+Added Pin To Net: NetName=GPIO1_30 Pin=U6-6
+Added Pin To Net: NetName=GPIO1_4 Pin=U6-7
+Added Pin To Net: NetName=GPIO1_0 Pin=U6-8
+Added Pin To Net: NetName=GPIO2_22 Pin=U6-9
+Added Pin To Net: NetName=GPIO2_23 Pin=U6-10

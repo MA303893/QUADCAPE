@@ -1,0 +1,16 @@
+Added Component: Designator=D12(WL-SMCW_YELLOW)
+Added Component: Designator=D13(WL-SMCW_YELLOW)
+Added Component: Designator=RD9(0603)
+Added Component: Designator=RD10(0603)
+Added Pin To Net: NetName=GND Pin=RD9-2
+Added Pin To Net: NetName=GND Pin=RD10-2
+Added Pin To Net: NetName=NetD12_1 Pin=D12-1
+Added Pin To Net: NetName=NetD12_1 Pin=RD9-1
+Added Net: Name=NetD12_1
+Added Pin To Net: NetName=NetD13_1 Pin=D13-1
+Added Pin To Net: NetName=NetD13_1 Pin=RD10-1
+Added Net: Name=NetD13_1
+Added Pin To Net: NetName=OUT_LED7 Pin=D12-2
+Added Net: Name=OUT_LED7
+Added Pin To Net: NetName=OUT_LED8 Pin=D13-2
+Added Net: Name=OUT_LED8

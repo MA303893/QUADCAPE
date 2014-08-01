@@ -1,0 +1,5 @@
+Change Component Designator: Old Designator=INA2 New Designator=INA3
+Change Component Designator: Old Designator=INA3 New Designator=INA2
+Change Component Designator: Old Designator=TP_batt New Designator=TP_batt1
+Change Component Designator: Old Designator=TP_esc2 New Designator=TP_esc3
+Change Component Designator: Old Designator=TP_esc3 New Designator=TP_esc2

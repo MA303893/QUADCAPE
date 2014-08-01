@@ -1,0 +1,18 @@
+Removed Pin From Net: NetName=NetQ1_1 Pin=Q1-2
+Removed Pin From Net: NetName=NetQ1_1 Pin=Q1-3
+Removed Pin From Net: NetName=NetQ1_4 Pin=Q1-4
+Removed Pin From Net: NetName=BATT(+) Pin=Q1-5
+Removed Pin From Net: NetName=NetQ1_4 Pin=R2-1
+Removed Pin From Net: NetName=NetQ1_1 Pin=R5-2
+Removed Pin From Net: NetName=NetQ1_4 Pin=U4-3
+Change Component DesignItemId : Designator=Q1 Old DesignItemId=TR-CSD25401Q3 New DesignItemId=CSD25483F4
+Change Component Footprint: Designator=Q1 Old Footprint=QFN3.3X3.3[SOP-8] New Footprint=YJC0003A
+Change Component Comment : Designator=Q1 Old Comment=TR-CSD25401Q3 New Comment=CSD25483F4
+Change Component Designator: OldDesignator=D17 NewDesignator=D11
+Added Pin To Net: NetName=BATT(+) Pin=Q1-2
+Added Pin To Net: NetName=NetQ1_4 Pin=Q1-3
+Added Pin To Net: NetName=NetQ1_1 Pin=R2-1
+Added Pin To Net: NetName=NetQ1_4 Pin=R5-2
+Added Pin To Net: NetName=NetQ1_1 Pin=U4-3
+Change Net Name : Old Net Name=NetD17_2 New Net Name=NetD11_2
+Change Net Name : Old Net Name=NetQ1_4 New Net Name=NetQ1_3

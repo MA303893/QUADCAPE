@@ -1,0 +1,81 @@
+Removed Pin From Net: NetName=I2C1_SCL Pin=P9A-17
+Removed Pin From Net: NetName=I2C1_SDA Pin=P9A-18
+Removed Pin From Net: NetName=VDD_5V Pin=R5a-1
+Removed Pin From Net: NetName=NetR3a_1 Pin=R5a-2
+Removed Pin From Net: NetName=NetR2a_2 Pin=R6a-1
+Removed Pin From Net: NetName=VDD_5V Pin=R6a-2
+Removed Pin From Net: NetName=GPIO1_2 Pin=U2-8
+Added Component: Designator=D2(WL-SMCW_YELLOW)
+Added Component: Designator=D3(WL-SMCW_YELLOW)
+Added Component: Designator=D4(WL-SMCW_YELLOW)
+Added Component: Designator=D5(WL-SMCW_YELLOW)
+Added Component: Designator=D6(WL-SMCW_YELLOW)
+Added Component: Designator=R1c(0603)
+Added Component: Designator=R1c(0603)
+Added Component: Designator=R1c(0603)
+Added Component: Designator=R1c(0603)
+Added Component: Designator=R1d(0402)
+Added Component: Designator=R2d(0402)
+Added Component: Designator=U8(DBV0005A_N)
+Added Pin To Net: NetName=GND Pin=D2-1
+Added Pin To Net: NetName=GND Pin=D3-2
+Added Pin To Net: NetName=GND Pin=D4-2
+Added Pin To Net: NetName=GND Pin=D5-2
+Added Pin To Net: NetName=GND Pin=D6-2
+Added Pin To Net: NetName=VDD_5V Pin=INA1-3
+Added Pin To Net: NetName=VDD_5V Pin=INA2-3
+Added Pin To Net: NetName=VDD_5V Pin=INA3-3
+Added Pin To Net: NetName=VDD_5V Pin=INA4-3
+Added Pin To Net: NetName=GND Pin=J12-3
+Added Pin To Net: NetName=GND Pin=J13-3
+Added Pin To Net: NetName=GPIO2_11 Pin=P8A-7
+Added Pin To Net: NetName=I2C1_SCL Pin=P9A-19
+Added Pin To Net: NetName=I2C1_SDA Pin=P9A-20
+Added Pin To Net: NetName=GND Pin=P9B-3
+Added Pin To Net: NetName=GND Pin=P9B-4
+Added Pin To Net: NetName=GND Pin=P9B-5
+Added Pin To Net: NetName=GND Pin=P9B-6
+Added Pin To Net: NetName=VDD_ADC Pin=R1d-1
+Added Pin To Net: NetName=GND Pin=R2d-1
+Added Pin To Net: NetName=GPIO2_11 Pin=U2-8
+Added Pin To Net: NetName=GND Pin=U8-2
+Added Pin To Net: NetName=VDD_5V Pin=U8-5
+Change Net Name : Old Net Name=GPIO2_11 New Net Name=TIMER4
+Added Pin To Net: NetName=NetD2_2 Pin=D2-2
+Added Pin To Net: NetName=NetD2_2 Pin=R1c-2
+Added Net: Name=NetD2_2
+Added Pin To Net: NetName=NetD3_1 Pin=D3-1
+Added Pin To Net: NetName=NetD3_1 Pin=R1c-1
+Added Net: Name=NetD3_1
+Added Pin To Net: NetName=NetD4_1 Pin=D4-1
+Added Pin To Net: NetName=NetD4_1 Pin=R1c-1
+Added Net: Name=NetD4_1
+Added Pin To Net: NetName=NetD5_1 Pin=D5-1
+Added Pin To Net: NetName=NetD5_1 Pin=R1c-1
+Added Net: Name=NetD5_1
+Added Pin To Net: NetName=NetD6_1 Pin=D6-1
+Added Pin To Net: NetName=NetD6_1 Pin=R1c-1
+Added Net: Name=NetD6_1
+Added Pin To Net: NetName=NetR1d_2 Pin=R1d-2
+Added Pin To Net: NetName=NetR1d_2 Pin=R2d-2
+Added Pin To Net: NetName=NetR1d_2 Pin=U8-3
+Added Net: Name=NetR1d_2
+Added Pin To Net: NetName=OUT_LED1 Pin=P9A-22
+Added Pin To Net: NetName=OUT_LED1 Pin=R1c-2
+Added Net: Name=OUT_LED1
+Added Pin To Net: NetName=OUT_LED2 Pin=P9A-24
+Added Pin To Net: NetName=OUT_LED2 Pin=R1c-2
+Added Net: Name=OUT_LED2
+Added Pin To Net: NetName=OUT_LED3 Pin=P9A-26
+Added Pin To Net: NetName=OUT_LED3 Pin=R1c-2
+Added Net: Name=OUT_LED3
+Added Pin To Net: NetName=OUT_LED4 Pin=P9A-28
+Added Pin To Net: NetName=OUT_LED4 Pin=R1c-2
+Added Net: Name=OUT_LED4
+Added Pin To Net: NetName=REF Pin=INA1-1
+Added Pin To Net: NetName=REF Pin=INA2-1
+Added Pin To Net: NetName=REF Pin=INA3-1
+Added Pin To Net: NetName=REF Pin=INA4-1
+Added Pin To Net: NetName=REF Pin=U8-1
+Added Pin To Net: NetName=REF Pin=U8-4
+Added Net: Name=REF

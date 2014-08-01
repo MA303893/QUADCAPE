@@ -1,0 +1,5 @@
+Added Pin To Net: NetName=OUT_LED9 Pin=P3-14
+Added Pin To Net: NetName=OUT_LED12 Pin=P3-15
+Added Pin To Net: NetName=OUT_LED10 Pin=P3-16
+Added Pin To Net: NetName=OUT_LED13 Pin=P3-17
+Added Pin To Net: NetName=OUT_LED11 Pin=P3-18

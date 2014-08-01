@@ -1,0 +1,8 @@
+Removed Pin From Net: NetName=UART4_RXD Pin=P1-11
+Removed Pin From Net: NetName=UART4_TXD Pin=P1-13
+Removed Pin From Net: NetName=UART5_TXD Pin=P3-37
+Removed Pin From Net: NetName=UART5_RXD Pin=P3-38
+Added Pin To Net: NetName=UART5_RXD Pin=P1-11
+Added Pin To Net: NetName=UART5_TXD Pin=P1-13
+Added Pin To Net: NetName=UART4_TXD Pin=P3-37
+Added Pin To Net: NetName=UART4_RXD Pin=P3-38

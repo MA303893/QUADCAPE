@@ -1,0 +1,38 @@
+curl -kO https://googledrive.com/host/0B_JlgOR4VNe0Sjg4ei0ySEY4aUE/mt7601.tar.gz
+tar xzvf mt7601.tar.gz -C /etc/Wireless/RT2870STA/RT2870STA.dat
+tar xzvf mt7601.tar.gz -C /lib/modules/$(uname-r)/ mt7601Usta.ko mtutil7601Usta.ko mtnet7601Usta.ko
+depmod -a
+
+#echomtnet7601Usta>/etc/modules-load.d/mt7601.conf
+
+
+
+
+
+
+
+
+
+
+QUICK INSTALLATION
+We have precompiled the drivers to make installation quicker. If you are having problems or if you’re a purist and want to do
+the full installation, go to FULL INSTALLATION instead.
+Enter these commands to download the precompiled drivers and install them:
+#mkdir-p/etc/Wireless/RT2870STA
+#curl-kOhttps://googledrive.com/host/0B_JlgOR4VNe0Sjg4ei0ySEY4aUE/mt7601.tar.gz
+#tarxzvfmt7601.tar.gz-C/etc/Wireless/RT2870STA/RT2870STA.dat
+#tarxzvfmt7601.tar.gz-C/lib/modules/$(uname-r)/mt7601Usta.komtutil7601Usta.komtnet7601Usta.ko
+#depmod-a
+You may see some warnings, that’s OK
+#echomtnet7601Usta>/etc/modules-load.d/mt7601.conf
+https://www.dropbox.com/sh/uqfrxqdeh86rfdb/AAAOmhuq2OSLAqDZe_2Yy3P6a/DPO_MT7601U_LinuxSTA_3.0.0.4_20130913.tar.bz2
+https://www.dropbox.com/sh/uqfrxqdeh86rfdb/AACVW1l-XpnTQa8EJRn_cpGYa/DPO_MT7601U_LinuxSTA_3.0.0.4_20130913.tar.bz2
+
+
+sudo apt-get install linux-headers-generic build-essential
+cd ~/Desktop/DPO_MT7601U_LinuxSTA_3.0.0.4_20130913
+make
+sudo make install
+sudo modprobe mt7601Usta
+
+

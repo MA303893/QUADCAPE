@@ -1,0 +1,36 @@
+Bill of Material for 
+On 7/15/2014 at 6:29:44 PM
+
+ Comment             Pattern     Quantity  Components
+------------------------------------------------------------------------------
+ 150060YS75000       WL-SMCW_YELLOW   16    D1, D2, D3, D5, D6, D7, D8   LED, Yellow, SMD     
+                                           D9, D10, D11, D12, D13, D14
+                                           D15, D17, D18
+ 5-146278-2          TE_5-146278-2    2    J1, J5                       Header, 100mil, 2x1, Tin, TH 
+ 5-146278-4          TE_5-146278-4    1    US1                          Header, 100mil, 4x1, Tin, TH 
+ CDBC520-G           SMC              1    D16                          Diode, Schottky, 20V, 5A, SMC 
+ Comment             SULLINS_PEC03DAAN    2    P2, P4                       Header, 100mil, 3x2, Tin, TH 
+ Comment             TSW-120-07-G-D    2    P1, P3                       Header, 100mil, 20x2, Gold, TH 
+ CRCW0402100KFKED    0603             1    R3                           RES, 100k ohm, 1%, 0.063W, 0402 
+ CRCW040210K0JNED    0603             2    R9, R11                      RES, 10k ohm, 5%, 0.063W, 0402 
+ CRCW040212K4FKED    0603             1    R8                           RES, 12.4k ohm, 1%, 0.063W, 0402 
+ CRCW040224K3FKED    0603             1    R6                           RES, 24.3k ohm, 1%, 0.063W, 0402 
+ CRCW040226K1FKED    0603             1    R7                           RES, 26.1k ohm, 1%, 0.063W, 0402 
+ CRCW040243K2FKED    0603             3    R1, R2, R5                   RES, 43.2k ohm, 1%, 0.063W, 0402 
+ CRCW040251K0JNED    0603             1    R4                           RES, 51k ohm, 5%, 0.063W, 0402 
+ CSD25483F4          YJC0003A         1    Q1                           MOSFET, P-CH, -20V, -1.6A, 1.0x0.35x0.6mm 
+ CSNL2010FT1L00      2010M            4    R14, R15, R16, R17           RES, 0.001 ohm, 1%, 1.5W, 2010 
+ HC-06               HC-06            1    BT1                                               
+ IMU_10DOF           IMU_10DOF        1    U7                                                
+ INA213AIDCK         DCK0006A_N       4    INA1, INA2, INA3, INA4       Voltage Output, High or Low Side Measurement, Bi-Directional Zero-Drift Series Current-Shunt Monitor, DCK0006A 
+ LP395Z              Z03A             1    U4                           Ultra Reliable Power Transistor, 3-pin TO-92 
+ MMSZ4678T1G         SOD-123          1    D4                           Diode, Zener, 1.8V, 500mW, SOD-123 
+ OPA735AIDBVR        DBV0005A_N       2    U5, U8                       0.05 uV/degC (Max), Single-Supply CMOS Zero-Drift Series Operational Amplifier, 2.7 to 12 V, -40 to 85 degC, 5-pin SOT23 (DBV0005A), Green (RoHS & no Sb/Br) 
+ OV7670              HEADER_2X9       2    U1, U6                       Header, Male 2x9 pin, 100mil spacing 
+ PEC03SBAN           Sullins_PEC03SBAN    4    J2, J3, J4, J6               Header, 100mil, 3x1, Tin, R/A, TH 
+ RT0603DRE07459RL    0603            18    R10, R12, R13, RD1, RD2, RD3 RES, 459 ohm, 0.5%, 0.1W, 0603 
+                                           RD4, RD5, RD6, RD7, RD8, RD9
+                                           RD10, RD11, RD12, RD13, RD14
+                                           RD15
+ SKM53               SKM53            1    U3                                                
+ SN74LVC1G04DBV      SOT23-5P         1    U2                           IC, Single Inverter  

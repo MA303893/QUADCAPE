@@ -1,0 +1,41 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          LED flash indicator for startup
+# Required-Start:    $all
+# Required-Stop:     $all
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: 
+# Description:       
+### END INIT INFO
+
+
+case "$1" in
+  start)
+        echo "Starting led indicator"
+        $PWD = pwd
+		cd ~/python
+		#start-stop-daemon --start -c "ubuntu" --chuid deploy --pidfile "/var/run/flash.pid" --start --exec ./flash -- "-start"
+		sudo python flash -start &
+		echo $! > /var/run/flash.pid
+		cd $PWD
+        ;;
+  stop)
+        echo "Stopping led indicator"
+        $PWD = pwd
+		cd ~/python
+		$PID = cat /var/run/flash.pid
+		kill $PID
+		sudo ./flash -stop
+		cd $PWD
+        ;;
+
+  *)
+        N=/etc/init.d/flash
+        echo "Usage: $N {start|stop}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0

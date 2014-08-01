@@ -1,0 +1,37 @@
+
+from: http://www.armhf.com/beaglebone-black-serial-uart-device-tree-overlays-for-ubuntu-and-debian-wheezy-tty01-tty02-tty04-tty05-dtbo-files/
+Device Tree Overlay
+
+The BeagleBone Black am335x-boneblack.dtb device file has only /dev/ttyO0 active by default. To enable the other UARTs, we could either modify this file or create an overlay (.dtbo) file to adjust this behavior at runtime. I opted to go with the .dtbo overlay approach. The compiled files and their proper application are noted in the section below.
+
+Figure 2 shows the connection between the board doing the monitoring (top) using UART4, RX pin P9-11 and TX pin P9-13. It is connected to the board being monitored (bottom) via its UART0 serial debug port at J1. Note that J1 has six pins, but only three are active: pin 1: ground, RX pin 4 and TX pin 5. In this case the TX is tied to RX and vice-versa (TX:P9-13 to RX:J1-4 and RX:P9-11 to TX:J1-5).
+
+Install and start minicom (apt-get install minicom) and launch it in setup mode (minicom -s). Select Serial port setup and change the Serial Device to /dev/ttyO4 (or whatever port you are using). Note that Hardware Flow Control is on by default and should be turned off.
+
+That’s it. You should now be seeing the login screen of the other BeagleBone Black:
+
+
+The most difficult part was figuring out how to build the device tree overlay files. To build the overlay, use the unmodified device tree compiler available in the Ubuntu packages (apt-get install device-tree-compiler). Googling around, many examples are Ångström based that use /plugin/ and had a command-line option -@ that Ubuntu stock device tree compiler does support.  By decompiling an existing overlay file it is not too difficult to see how the parameters are defined within the file.  Below are overlay files for the various serial ports of the BeagleBone Black.
+
+ 
+
+Copy the following .dtbo overlay files to the /lib/firmware directory and apply them after each boot with the command: echo ttyO1_armhf.com > /sys/devices/bone_capemgr*/slots
+
+ttyO1_armhf.com-00A0.dtbo
+ttyO2_armhf.com-00A0.dtbo
+ttyO4_armhf.com-00A0.dtbo
+ttyO5_armhf.com-00A0.dtbo
+
+Note 1: ttyO3 does not have an RX pinout (it is tied to the TDA19988 HDMI chip)
+Note 2: ttyO5 shares pins with the HDMI overlay – both cannot be active at the same time
+Note 3: ttyO0 is available on J1 and does not require an overlay
+
+After applying all four of the .dtbo files, you should see something like:
+
+root@ubuntu-armhf:/# ll /dev/ttyO*
+crw-rw---- 1 root tty     249, 0 Jan  1  2000 /dev/ttyO0
+crw-rw---- 1 root dialout 249, 1 Jun 17 18:16 /dev/ttyO1
+crw-rw---- 1 root dialout 249, 2 Jun 17 18:16 /dev/ttyO2
+crw-rw---- 1 root dialout 249, 4 Jun 17 18:16 /dev/ttyO4
+crw-rw---- 1 root dialout 249, 5 Jun 17 18:16 /dev/ttyO5
+root@ubuntu-armhf:/# 

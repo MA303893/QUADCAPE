@@ -1,0 +1,15 @@
+Removed Pin From Net: NetName=NetD6_1 Pin=R1c-1
+Removed Pin From Net: NetName=OUT_LED4 Pin=R1c-2
+Change Component Designator: OldDesignator=R1c NewDesignator=RD3
+Change Component Designator: OldDesignator=R1c NewDesignator=RD4
+Change Component Designator: OldDesignator=R1c NewDesignator=RD5
+Change Component Designator: OldDesignator=R1c NewDesignator=RD6
+Added Pin To Net: NetName=NetD2_2 Pin=R1c-2
+Added Pin To Net: NetName=NetD3_1 Pin=RD3-1
+Added Pin To Net: NetName=OUT_LED1 Pin=RD3-2
+Added Pin To Net: NetName=NetD4_1 Pin=RD4-1
+Added Pin To Net: NetName=OUT_LED2 Pin=RD4-2
+Added Pin To Net: NetName=NetD5_1 Pin=RD5-1
+Added Pin To Net: NetName=OUT_LED3 Pin=RD5-2
+Added Pin To Net: NetName=NetD6_1 Pin=RD6-1
+Added Pin To Net: NetName=OUT_LED4 Pin=RD6-2
