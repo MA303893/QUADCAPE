@@ -9,6 +9,7 @@
 ********************************************************************************
                                 Raising innovation
 ********************************************************************************
+
 lines=["line1:asdgfasdg","line2","line3fasdf","asdfasdf","Asdg","asdgfagsdfgsdfhsdgfhsdg"]
 
 LINE_LENGTH=48
@@ -22,4 +23,5 @@ for line in lines:
 	print " "* (LINE_LENGTH-len(line))+"     *"
 print " "*10+"*"+" "*58+"*\n"+" " *10 + "*"*60+"\n"
           ************************************************************          
-		  *                          options                         *
+          *                          options                         *
+
