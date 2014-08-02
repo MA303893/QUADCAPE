@@ -40,7 +40,7 @@ import mymodule
 
 print "Loading user variables"
 #pid coefficients
-pid_P_accel=30
+pid_P_accel=31
 pid_I_accel=35
 pid_D_accel=1
 pid_P_gyro=2
