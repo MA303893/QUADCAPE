@@ -18,7 +18,7 @@ time.sleep(1/6)
 #import pwm
 import kbhit
 import os
-import sys
+import sys 
 import signal 
 import pwm
 """
@@ -40,17 +40,17 @@ import mymodule
 
 print "Loading user variables"
 #pid coefficients
-pid_P_accel=2
-pid_I_accel=1
+pid_P_accel=30
+pid_I_accel=35
 pid_D_accel=1
 pid_P_gyro=2
-pid_I_gyro=1
-pid_D_gyro=1
+pid_I_gyro=0
+pid_D_gyro= 0
 
 #measurement offsets
 gx_os=0 #in degrees/sec
 gy_os=0
-gz_os=0
+gz_os=0            
 
 ax_os=0 #in Gs 
 ay_os=0
@@ -263,7 +263,7 @@ def tuning():
 			
 			data_gx,data_gy,data_gz,t=Gyro.get() #degrees/sec
 			data_ax,data_ay,data_az=Accel.get() #in G 
-			print "Accel: {} {} {} Gyro: {} {} {}".format(data_ax,data_ay,data_az,data_gx,data_gy,data_gz)
+			print "Accel: \n{} \n{} \n{} \nGyro: \n{} \n{} \n{}".format(data_ax,data_ay,data_az,data_gx,data_gy,data_gz)
 				
 			#quick run
 			if 'r' in char:
@@ -271,21 +271,43 @@ def tuning():
 				os.system("clear")
 				print "running..."
 				print "Throttle:5++ t+ h- n-- Enter=0  SPACE stop"
-				THROTTLE=0
+				THROTTLE=100
 				LEDs=0
-				pwm_br =0
-				pwm_bl = 0
-				pwm_fl =0
-				pwm_fr =0
+				pwm_br =150
+				pwm_bl =150
+				pwm_fl =150
+				pwm_fr =150
 				br_err=0
 				bl_err = 0
 				fl_err =0 
 				fr_err = 0 
+				
+				print "Starting advanced current auto-balance algorithms..."
+				time.sleep(.3)
+				print "INITIALIZING: Motor 1, Back right"
+				pwm.changeSpeed1(pwm_br)
+				#time.sleep(.8)
+				print "INITIALIZING: Motor 2, Front right"
+				pwm.changeSpeed2(pwm_fr)
+				#time.sleep(.8)	
+				pwm.changeSpeed4(pwm_fl)
+				print "INITIALIZING: Motor 3, Front left"
+				time.sleep(.8)
+				pwm.changeSpeed3(pwm_bl)
+				print "INITIALIZING: Motor 4, Back left"
+				print "All motors safetly initialized"
+				time.sleep(.8)	
+				
+				MAX_SPEED=1500
+					
+				base_speed=180	
+				print "MAX_SPEED  {}  \nTHROTTLE: {}  \nbr {} \nfr {} \nbl {} \nfl {}".format(MAX_SPEED,THROTTLE,pwm_br,pwm_fr,pwm_bl,pwm_fl)
 				while tune:
-					os.system("clear")
-					print "running..."
-					print "Throttle:5++ t+ h- n-- MAX_SPEED: +10 p, +1 :, -10 / \nEnter=0  SPACE stop"
-					print "MAX_SPEED  {}  THROTTLE: {}  br {} fr {} bl {} fl {}".format(MAX_SPEED,THROTTLE,pwm_br,pwm_fr,pwm_bl,pwm_fl)
+					#os.system("clear")
+					#print "running..."
+					#print "Throttle:5++ t+ h- n-- MAX_SPEED: +10 p, +1 :, -10 / \nEnter=0  SPACE stop"
+					"""
+					print "MAX_SPEED  {}  \nTHROTTLE: {}  \nbr {} \nfr {} \nbl {} \nfl {}".format(MAX_SPEED,THROTTLE,pwm_br,pwm_fr,pwm_bl,pwm_fl)
 					if br_err>0:
 						print "ERROR, backright max speed error"
 					if bl_err>0:
@@ -294,7 +316,7 @@ def tuning():
 						print "ERROR, frontright max speed error"
 					if fl_err>0:
 						print "ERROR, frontleft max speed error"
-					
+					"""
 					data_gx,data_gy,data_gz,t=Gyro.get() #degrees/sec
 					data_ax,data_ay,data_az=Accel.get() #in G 	
 					data_gx,data_gy,data_gz=data_gx+gx_os,data_gy+gy_os,data_gz+gz_os
@@ -308,10 +330,10 @@ def tuning():
 					az_up=az.update(data_az)
 					
 					#decide ratios
-					pwm_br =.5*THROTTLE+(-.3)*az_up 
-					pwm_bl =.5*THROTTLE+(-.3)*az_up 
-					pwm_fl =.5*THROTTLE+(-.3)*az_up 
-					pwm_fr =.5*THROTTLE+(-.3)*az_up 
+					pwm_br =base_speed+.5*THROTTLE+0*(-.3*gx_up-.3*gy_up-0*gz_up)  +12*(-.5*ax_up +.5* ay_up+0* az_up)
+					pwm_bl =base_speed+.5*THROTTLE+0*(-.3*gx_up+.3*gy_up+0*gz_up)  +12*(+.5*ax_up +.5* ay_up+0* az_up)
+					pwm_fl =base_speed+.5*THROTTLE+0*(+.3*gx_up+.3*gy_up-0*gz_up)  +12*(+.5*ax_up -.5* ay_up+0* az_up)
+					pwm_fr =base_speed+.5*THROTTLE+0*(+.3*gx_up-.3*gy_up+0*gz_up)  +12*(-.5*ax_up -.5* ay_up+0* az_up)
 						
 					#errors
 					br_err=0
@@ -319,6 +341,7 @@ def tuning():
 					fl_err =0 
 					fr_err = 0 
 					
+						
 					if pwm_br>MAX_SPEED:
 						br_err=1
 						pwm_br=MAX_SPEED
@@ -340,9 +363,13 @@ def tuning():
 					#P9_14 PWM Back Left	PWM3
 					#P9_16 PWM Front Left	PWM4
 					pwm.changeSpeed1(pwm_br)
+				
 					pwm.changeSpeed2(pwm_fr)
+					
 					pwm.changeSpeed3(pwm_bl)
+					
 					pwm.changeSpeed4(pwm_fl)
+				
 					
 					if kbhit.kbhit()>0:
 						char=kbhit.getch().lower()

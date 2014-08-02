@@ -25,9 +25,9 @@ def init():
 
 class PWM:
 	speed1 = 0
-    speed2 = 0
-    speed3 = 0
-    speed4 = 0
+	speed2 = 0
+	speed3 = 0
+	speed4 = 0
 	unit = 1250
 	path1 = ''
 	path2 = ''
@@ -84,8 +84,8 @@ class PWM:
 	def changeSpeed1(self, speed):
 		if speed >= 0 and speed <= 1000:
 			os.system("echo " + str(int(speed*float(self.unit)+float(self.startDuty))) + " > " + "/sys/devices/" + self.path1 + "/duty")
-			speed = subprocess.check_output("cat /sys/devices/" + self.path1 + "/duty", shell=True)
-			self.speed1 = (float(speed) - float(self.startDuty))/float(self.unit)
+			#speed = subprocess.check_output("cat /sys/devices/" + self.path1 + "/duty", shell=True)
+			#self.speed1 = (float(speed) - float(self.startDuty))/float(self.unit)
 			return self.speed1
 		else:
 			#when writing code, check if a string popped out as the error checker
@@ -94,8 +94,8 @@ class PWM:
 	def changeSpeed2(self, speed):
 		if speed >= 0 and speed <= 1000:
 			os.system("echo " + str(int(speed*float(self.unit)+float(self.startDuty))) + " > " + "/sys/devices/" + self.path2 + "/duty")
-			speed = subprocess.check_output("cat /sys/devices/" + self.path2 + "/duty", shell=True)
-			self.speed2 = (float(speed) - float(self.startDuty))/float(self.unit)
+			#speed = subprocess.check_output("cat /sys/devices/" + self.path2 + "/duty", shell=True)
+			#self.speed2 = (float(speed) - float(self.startDuty))/float(self.unit)
 			return self.speed2
 		else:
 			#when writing code, check if a string popped out as the error checker
@@ -104,8 +104,8 @@ class PWM:
 	def changeSpeed3(self, speed):
 		if speed >= 0 and speed <= 1000:
 			os.system("echo " + str(int(speed*float(self.unit)+float(self.startDuty))) + " > " + "/sys/devices/" + self.path3 + "/duty")
-			speed = subprocess.check_output("cat /sys/devices/" + self.path3 + "/duty", shell=True)
-			self.speed3 = (float(speed) - float(self.startDuty))/float(self.unit)
+			#speed = subprocess.check_output("cat /sys/devices/" + self.path3 + "/duty", shell=True)
+			#self.speed3 = (float(speed) - float(self.startDuty))/float(self.unit)
 			return self.speed3
 		else:
 			#when writing code, check if a string popped out as the error checker
@@ -114,8 +114,8 @@ class PWM:
 	def changeSpeed4(self, speed):
 		if speed >= 0 and speed <= 1000:
 			os.system("echo " + str(int(speed*float(self.unit)+float(self.startDuty))) + " > " + "/sys/devices/" + self.path4 + "/duty")
-			speed = subprocess.check_output("cat /sys/devices/" + self.path4 + "/duty", shell=True)
-			self.speed4 = (float(speed) - float(self.startDuty))/float(self.unit)
+			#speed = subprocess.check_output("cat /sys/devices/" + self.path4 + "/duty", shell=True)
+			#self.speed4 = (float(speed) - float(self.startDuty))/float(self.unit)
 			return self.speed4
 		else:
 			#when writing code, check if a string popped out as the error checker
