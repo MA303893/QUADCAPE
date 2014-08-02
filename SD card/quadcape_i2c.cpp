@@ -7,7 +7,8 @@ int HMC5883L_C::write(HMC5883L_enum reg, char data){
 	buf[0]= reg;
 	buf[1]=data;
 	
-if (write(bus,buf,2) != 2) {
+if (write(bus,buf,2) != 2) 
+{
     /* ERROR HANDLING: i2c transaction failed */
     printf("Failed to write to the i2c bus.\n");
     buffer = g_strerror(errno);
