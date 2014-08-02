@@ -25,9 +25,9 @@ def init():
 
 class PWM:
 	speed1 = 0
-        speed2 = 0
-        speed3 = 0
-        speed4 = 0
+    speed2 = 0
+    speed3 = 0
+    speed4 = 0
 	unit = 1250
 	path1 = ''
 	path2 = ''
@@ -122,10 +122,10 @@ class PWM:
 			return "speed must be between 0 and 1000"
 
 	def stop(self):
-                os.system("echo " + str(self.unit) + " > /sys/devices/" + self.path1 + "/duty")
-                os.system("echo " + str(self.unit) + " > /sys/devices/" + self.path2 + "/duty")
-                os.system("echo " + str(self.unit) + " > /sys/devices/" + self.path3 + "/duty")
-                os.system("echo " + str(self.unit) + " > /sys/devices/" + self.path4 + "/duty")
+                os.system("echo " + str(self.startDuty) + " > /sys/devices/" + self.path1 + "/duty")
+                os.system("echo " + str(self.startDuty) + " > /sys/devices/" + self.path2 + "/duty")
+                os.system("echo " + str(self.startDuty) + " > /sys/devices/" + self.path3 + "/duty")
+                os.system("echo " + str(self.startDuty) + " > /sys/devices/" + self.path4 + "/duty")
 
 
 		

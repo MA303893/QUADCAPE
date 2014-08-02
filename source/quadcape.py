@@ -1,3 +1,4 @@
+#!/usr/bin/env python 
 import time
 
 print"Importing i2c.py       "
@@ -320,12 +321,16 @@ def tuning():
 					
 					if pwm_br>MAX_SPEED:
 						br_err=1
-					if pwm_br>MAX_SPEED:
-						bl_err = 1
-					if pwm_br>MAX_SPEED:
+						pwm_br=MAX_SPEED
+					if pwm_bl>MAX_SPEED:
+						bl_err = 1						
+						pwm_bl=MAX_SPEED
+					if pwm_fl>MAX_SPEED:
 						fl_err =1 
-					if pwm_br>MAX_SPEED:
+						pwm_fl=MAX_SPEED
+					if pwm_fr>MAX_SPEED:
 						fr_err = 1 
+						pwm_fr=MAX_SPEED
 					
 					
 					

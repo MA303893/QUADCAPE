@@ -1,0 +1,10 @@
+uname_r=3.8.13-bone59
+#dtb=
+
+optargs=quiet capemgr.disable_partno=BB-BONELT-HDMI,BB-BONELT-HDMIN,BB-BONE-EMMC-2G capemgr.enable_partno=BB-UART4,BB-UART5,am33xx_pwm
+
+
+
+
+
+cmdline=quiet
