@@ -1,0 +1,981 @@
+http://www.mediatek.com/en/downloads/mt7610u-usb/
+http://www.mediafire.com/download/fezezv1u28y7eey/rt2870-mt7601Usta-kuid_t-kgid_t.patch
+http://www.arnelborja.com/compiling-rt2870-wifi-driver-in-fedora/
+http://askubuntu.com/questions/457061/ralink-148f7601-wifi-adaptor-installation
+
+
+Download Driver and Patch by using the links.
+
+Do not connect the USB:
+
+sudo apt-get install --reinstall linux-headers-generic build-essential  
+tar xjf DPO_MT7601U_LinuxSTA_3.0.0.4_20130913.tar.bz2  
+cd DPO_MT7601U_LinuxSTA_3.0.0.4_20130913/  
+patch -p0 < ~/(ADD THE PATH)/rt2870-mt7601Usta-kuid_t-kgid_t.patch  
+make  
+su -c 'mkdir -p /etc/Wireless/RT2870STA/'  
+su -c 'cp RT2870STA.dat /etc/Wireless/RT2870STA/RT2870STA.dat'  
+Connect the USB
+
+su -c '/sbin/insmod os/linux/mt7601Usta.ko'
+If works:
+
+su -c 'make install'
+
+
+
+https://wiki.debian.org/rtl819x#Debian_7.0_.22Wheezy.22
+http://wiesel.ece.utah.edu/redmine/projects/hacks/wiki/BeagleBone_Black_AP
+https://help.ubuntu.com/10.04/serverguide/network-configuration.html
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+login as: ubuntu
+ubuntu@192.168.7.2's password:
+Welcome to Ubuntu 14.04.1 LTS (GNU/Linux 3.8.13-bone59 armv7l)
+
+ * Documentation:  https://help.ubuntu.com/
+Last login: Mon Jul  7 13:23:59 2014 from 192.168.7.1
+ubuntu@arm:~$
+ubuntu@arm:~$
+ubuntu@arm:~$
+ubuntu@arm:~$
+ubuntu@arm:~$ ifup ra0
+ifup: failed to open lockfile /run/network/.ifstate.lock: Permi
+ubuntu@arm:~$ sudo ifup ra0
+[sudo] password for ubuntu:
+Sorry, try again.
+[sudo] password for ubuntu:
+wpa_supplicant: /sbin/wpa_supplicant daemon failed to start
+run-parts: /etc/network/if-pre-up.d/wpasupplicant exited with r
+Internet Systems Consortium DHCP Client 4.2.4
+Copyright 2004-2012 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+
+Cannot find device "ra0"
+Error getting hardware address for "ra0": No such device
+Failed to bring up ra0.
+ubuntu@arm:~$ lsmod
+Module                  Size  Used by
+g_multi                51145  0
+libcomposite           14931  1 g_multi
+ubuntu@arm:~$ sudo su
+bash: /opt/ros/indigo/setup.bash: No such file or directory
+root@arm:/home/ubuntu#
+root@arm:/home/ubuntu#
+root@arm:/home/ubuntu#
+root@arm:/home/ubuntu# /sbin/insmod os/linux/mt7601Usta.ko
+insmod: ERROR: could not load module os/linux/mt7601Usta.ko: No                  ectory
+root@arm:/home/ubuntu# cp /home/ubuntu/wifi/
+3.8.13-bone59-dtbs.tar.gz
+3.8.13-bone59-firmware.tar.gz
+defconfig.txt
+install-me.sh
+instructions.txt
+linux-dev-3.8.13-bone53.tar.gz
+linux-firmware-image-3.8.13-bone59_1trusty_armhf.deb
+linux-headers-3.8.13-bone59_1trusty_armhf.deb
+linux-image-3.8.13-bone59_1trusty_armhf.deb
+mt7601Usta.ko
+mt7610u_wifi_sta_v3002_dpo_20130916.tar.bz2
+patch-3.8.13-bone59.diff.gz
+rt2870-mt7601Usta-kuid_t-kgid_t.patch
+RT2870STA.dat
+thirdparty.txt
+root@arm:/home/ubuntu# cp /home/ubuntu/wifi/mt7601Usta.ko /
+bin/        home/       opt/        sbin/       var/
+boot/       lib/        proc/       srv/
+dev/        lost+found/ r/          sys/
+dtc.sh      media/      root/       tmp/
+etc/        mnt/        run/        usr/
+root@arm:/home/ubuntu# cp /home/ubuntu/wifi/mt7601Usta.ko /lib/                  modules/3.8.13-bone59/kernel//drivers/net/wireless/
+root@arm:/home/ubuntu# depmod -a
+root@arm:/home/ubuntu# lsmod
+Module                  Size  Used by
+g_multi                51145  0
+libcomposite           14931  1 g_multi
+root@arm:/home/ubuntu# ifconfig
+eth0      Link encap:Ethernet  HWaddr d0:39:72:14:ec:5e
+          UP BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+          Interrupt:40
+
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+usb0      Link encap:Ethernet  HWaddr 02:8d:17:e5:ab:91
+          inet addr:192.168.7.2  Bcast:192.168.7.3  Mask:255.25                  5.255.252
+          inet6 addr: fe80::8d:17ff:fee5:ab91/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:491 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:410 errors:0 dropped:0 overruns:0 carrier:                  0
+          collisions:0 txqueuelen:1000
+          RX bytes:61327 (61.3 KB)  TX bytes:78798 (78.7 KB)
+
+root@arm:/home/ubuntu# ifconfig
+eth0      Link encap:Ethernet  HWaddr d0:39:72:14:ec:5e
+          UP BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+          Interrupt:40
+
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+usb0      Link encap:Ethernet  HWaddr 02:8d:17:e5:ab:91
+          inet addr:192.168.7.2  Bcast:192.168.7.3  Mask:255.255.255.252
+          inet6 addr: fe80::8d:17ff:fee5:ab91/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:509 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:440 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:62255 (62.2 KB)  TX bytes:84698 (84.6 KB)
+
+root@arm:/home/ubuntu# lshw
+arm
+    description: Computer
+    product: TI AM335x BeagleBone
+    width: 32 bits
+  *-core
+       description: Motherboard
+       physical id: 0
+       capabilities: ti_am335x-bone ti_am33xx
+     *-cpu
+          description: CPU
+          product: cpu
+          physical id: 0
+          bus info: cpu@0
+          size: 300MHz
+          capacity: 300MHz
+          capabilities: cpufreq
+     *-memory
+          description: System memory
+          physical id: 1
+          size: 496MiB
+  *-network:0
+       description: Ethernet interface
+       physical id: 1
+       logical name: eth0
+       serial: d0:39:72:14:ec:5e
+       capabilities: ethernet physical
+       configuration: broadcast=yes driver=TI CPSW Driver v1.0 driverversion=1.0 link=no multicast=yes
+  *-network:1
+       description: Ethernet interface
+       physical id: 2
+       logical name: usb0
+       serial: 02:8d:17:e5:ab:91
+       capabilities: ethernet physical
+       configuration: broadcast=yes driver=g_ether driverversion=29-May-2008 firmware=musb-hdrc ip=192.168.7.2 link=yes multicast=yes
+root@arm:/home/ubuntu# cd /home/ubuntu/wifi/
+root@arm:/home/ubuntu/wifi# ls
+3.8.13-bone59-dtbs.tar.gz
+3.8.13-bone59-firmware.tar.gz
+defconfig.txt
+install-me.sh
+instructions.txt
+linux-dev-3.8.13-bone53.tar.gz
+linux-firmware-image-3.8.13-bone59_1trusty_armhf.deb
+linux-headers-3.8.13-bone59_1trusty_armhf.deb
+linux-image-3.8.13-bone59_1trusty_armhf.deb
+mt7601Usta.ko
+mt7610u_wifi_sta_v3002_dpo_20130916.tar.bz2
+patch-3.8.13-bone59.diff.gz
+rt2870-mt7601Usta-kuid_t-kgid_t.patch
+RT2870STA.dat
+thirdparty.txt
+root@arm:/home/ubuntu/wifi# cd RT2870STA.dat /etc/Wireless/RT28
+RT2860STA/ RT2870STA/
+root@arm:/home/ubuntu/wifi# cd RT2870STA.dat /etc/Wireless/RT2870STA/RT2870STA.dat
+bash: cd: RT2870STA.dat: Not a directory
+root@arm:/home/ubuntu/wifi# cp RT2870STA.dat /etc/Wireless/RT2870STA/RT2870STA.dat
+root@arm:/home/ubuntu/wifi# /sbin/insmod os/linux/mt7601Usta.ko
+insmod: ERROR: could not load module os/linux/mt7601Usta.ko: No such file or directory
+root@arm:/home/ubuntu/wifi# /sbin/insmod /home/ubuntu/wifi/mt7601Usta.ko
+root@arm:/home/ubuntu/wifi# lsmod
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+login as: ubuntu
+ubuntu@192.168.7.2's password:
+Welcome to Ubuntu 14.04.1 LTS (GNU/Linux 3.8.13-bone59 armv7l)
+
+ * Documentation:  https://help.ubuntu.com/
+Last login: Mon Jul  7 13:23:59 2014 from 192.168.7.1
+ubuntu@arm:~$
+ubuntu@arm:~$
+ubuntu@arm:~$
+ubuntu@arm:~$
+ubuntu@arm:~$ ifup ra0
+ifup: failed to open lockfile /run/network/.ifstate.lock: Permi
+ubuntu@arm:~$ sudo ifup ra0
+[sudo] password for ubuntu:
+Sorry, try again.
+[sudo] password for ubuntu:
+wpa_supplicant: /sbin/wpa_supplicant daemon failed to start
+run-parts: /etc/network/if-pre-up.d/wpasupplicant exited with r
+Internet Systems Consortium DHCP Client 4.2.4
+Copyright 2004-2012 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+
+Cannot find device "ra0"
+Error getting hardware address for "ra0": No such device
+Failed to bring up ra0.
+ubuntu@arm:~$ lsmod
+Module                  Size  Used by
+g_multi                51145  0
+libcomposite           14931  1 g_multi
+ubuntu@arm:~$ sudo su
+bash: /opt/ros/indigo/setup.bash: No such file or directory
+root@arm:/home/ubuntu#
+root@arm:/home/ubuntu#
+root@arm:/home/ubuntu#
+root@arm:/home/ubuntu# /sbin/insmod os/linux/mt7601Usta.ko
+insmod: ERROR: could not load module os/linux/mt7601Usta.ko: No                  ectory
+root@arm:/home/ubuntu# cp /home/ubuntu/wifi/
+3.8.13-bone59-dtbs.tar.gz
+3.8.13-bone59-firmware.tar.gz
+defconfig.txt
+install-me.sh
+instructions.txt
+linux-dev-3.8.13-bone53.tar.gz
+linux-firmware-image-3.8.13-bone59_1trusty_armhf.deb
+linux-headers-3.8.13-bone59_1trusty_armhf.deb
+linux-image-3.8.13-bone59_1trusty_armhf.deb
+mt7601Usta.ko
+mt7610u_wifi_sta_v3002_dpo_20130916.tar.bz2
+patch-3.8.13-bone59.diff.gz
+rt2870-mt7601Usta-kuid_t-kgid_t.patch
+RT2870STA.dat
+thirdparty.txt
+root@arm:/home/ubuntu# cp /home/ubuntu/wifi/mt7601Usta.ko /
+bin/        home/       opt/        sbin/       var/
+boot/       lib/        proc/       srv/
+dev/        lost+found/ r/          sys/
+dtc.sh      media/      root/       tmp/
+etc/        mnt/        run/        usr/
+root@arm:/home/ubuntu# cp /home/ubuntu/wifi/mt7601Usta.ko /lib/                  modules/3.8.13-bone59/kernel//drivers/net/wireless/
+root@arm:/home/ubuntu# depmod -a
+root@arm:/home/ubuntu# lsmod
+Module                  Size  Used by
+g_multi                51145  0
+libcomposite           14931  1 g_multi
+root@arm:/home/ubuntu# ifconfig
+eth0      Link encap:Ethernet  HWaddr d0:39:72:14:ec:5e
+          UP BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+          Interrupt:40
+
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+usb0      Link encap:Ethernet  HWaddr 02:8d:17:e5:ab:91
+          inet addr:192.168.7.2  Bcast:192.168.7.3  Mask:255.25                  5.255.252
+          inet6 addr: fe80::8d:17ff:fee5:ab91/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:491 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:410 errors:0 dropped:0 overruns:0 carrier:                  0
+          collisions:0 txqueuelen:1000
+          RX bytes:61327 (61.3 KB)  TX bytes:78798 (78.7 KB)
+
+root@arm:/home/ubuntu# ifconfig
+eth0      Link encap:Ethernet  HWaddr d0:39:72:14:ec:5e
+          UP BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+          Interrupt:40
+
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+usb0      Link encap:Ethernet  HWaddr 02:8d:17:e5:ab:91
+          inet addr:192.168.7.2  Bcast:192.168.7.3  Mask:255.255.255.252
+          inet6 addr: fe80::8d:17ff:fee5:ab91/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:509 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:440 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:62255 (62.2 KB)  TX bytes:84698 (84.6 KB)
+
+root@arm:/home/ubuntu# lshw
+arm
+    description: Computer
+    product: TI AM335x BeagleBone
+    width: 32 bits
+  *-core
+       description: Motherboard
+       physical id: 0
+       capabilities: ti_am335x-bone ti_am33xx
+     *-cpu
+          description: CPU
+          product: cpu
+          physical id: 0
+          bus info: cpu@0
+          size: 300MHz
+          capacity: 300MHz
+          capabilities: cpufreq
+     *-memory
+          description: System memory
+          physical id: 1
+          size: 496MiB
+  *-network:0
+       description: Ethernet interface
+       physical id: 1
+       logical name: eth0
+       serial: d0:39:72:14:ec:5e
+       capabilities: ethernet physical
+       configuration: broadcast=yes driver=TI CPSW Driver v1.0 driverversion=1.0 link=no multicast=yes
+  *-network:1
+       description: Ethernet interface
+       physical id: 2
+       logical name: usb0
+       serial: 02:8d:17:e5:ab:91
+       capabilities: ethernet physical
+       configuration: broadcast=yes driver=g_ether driverversion=29-May-2008 firmware=musb-hdrc ip=192.168.7.2 link=yes multicast=yes
+root@arm:/home/ubuntu# cd /home/ubuntu/wifi/
+root@arm:/home/ubuntu/wifi# ls
+3.8.13-bone59-dtbs.tar.gz
+3.8.13-bone59-firmware.tar.gz
+defconfig.txt
+install-me.sh
+instructions.txt
+linux-dev-3.8.13-bone53.tar.gz
+linux-firmware-image-3.8.13-bone59_1trusty_armhf.deb
+linux-headers-3.8.13-bone59_1trusty_armhf.deb
+linux-image-3.8.13-bone59_1trusty_armhf.deb
+mt7601Usta.ko
+mt7610u_wifi_sta_v3002_dpo_20130916.tar.bz2
+patch-3.8.13-bone59.diff.gz
+rt2870-mt7601Usta-kuid_t-kgid_t.patch
+RT2870STA.dat
+thirdparty.txt
+root@arm:/home/ubuntu/wifi# cd RT2870STA.dat /etc/Wireless/RT28
+RT2860STA/ RT2870STA/
+root@arm:/home/ubuntu/wifi# cd RT2870STA.dat /etc/Wireless/RT2870STA/RT2870STA.dat
+bash: cd: RT2870STA.dat: Not a directory
+root@arm:/home/ubuntu/wifi# cp RT2870STA.dat /etc/Wireless/RT2870STA/RT2870STA.dat
+root@arm:/home/ubuntu/wifi# /sbin/insmod os/linux/mt7601Usta.ko
+insmod: ERROR: could not load module os/linux/mt7601Usta.ko: No such file or directory
+root@arm:/home/ubuntu/wifi# /sbin/insmod /home/ubuntu/wifi/mt7601Usta.ko
+root@arm:/home/ubuntu/wifi# lsmod
+Module                  Size  Used by
+mt7601Usta            673463  1
+g_multi                51145  0
+libcomposite           14931  1 g_multi
+root@arm:/home/ubuntu/wifi# cd /home/ubuntu/wifi/
+root@arm:/home/ubuntu/wifi# make install
+make: *** No rule to make target `install'.  Stop.
+root@arm:/home/ubuntu/wifi# cd ../driver/mt7610u_wifi_sta_v3002_dpo_20130916
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# make install
+make -C /home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916/os/linux -f Makefile.6 install
+mkdir: cannot create directory ‘/etc/Wireless’: File exists
+make[1]: Entering directory `/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916/os/linux'
+rm -rf /etc/Wireless/RT2860STA
+mkdir /etc/Wireless/RT2860STA
+cp /home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916/conf/RT2860STA.dat /etc/Wireless/RT2860STA/.
+install -d /lib/modules/3.8.13-bone59/kernel/drivers/net/wireless/
+install -m 644 -c mt7650u_sta.ko /lib/modules/3.8.13-bone59/kernel/drivers/net/wireless/
+install: cannot stat ‘mt7650u_sta.ko’: No such file or directory
+make[1]: *** [install] Error 1
+make[1]: Leaving directory `/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916/os/linux'
+make: *** [install] Error 2
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifconfig
+eth0      Link encap:Ethernet  HWaddr d0:39:72:14:ec:5e
+          UP BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+          Interrupt:40
+
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+ra0       Link encap:Ethernet  HWaddr 00:0d:a3:22:16:a8
+          inet6 addr: fe80::20d:a3ff:fe22:16a8/64 Scope:Link
+          UP BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:955 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:168 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:184524 (184.5 KB)  TX bytes:17472 (17.4 KB)
+
+usb0      Link encap:Ethernet  HWaddr 02:8d:17:e5:ab:91
+          inet addr:192.168.7.2  Bcast:192.168.7.3  Mask:255.255.255.252
+          inet6 addr: fe80::8d:17ff:fee5:ab91/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:1035 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:995 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:102699 (102.6 KB)  TX bytes:180060 (180.0 KB)
+
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# apt-get update
+Err http://ports.ubuntu.com trusty InRelease
+
+Err http://packages.ros.org raring InRelease
+
+Err http://repos.rcn-ee.net trusty InRelease
+
+Err http://ports.ubuntu.com trusty-updates InRelease
+
+Err http://packages.ros.org raring Release.gpg
+  Could not resolve 'packages.ros.org'
+Err http://repos.rcn-ee.net trusty Release.gpg
+  Could not resolve 'repos.rcn-ee.net'
+Err http://ports.ubuntu.com trusty Release.gpg
+  Could not resolve 'ports.ubuntu.com'
+Err http://ports.ubuntu.com trusty-updates Release.gpg
+  Could not resolve 'ports.ubuntu.com'
+^Cading package lists... 0%
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifup ra0
+ifup: interface ra0 already configured
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# less /etc/ne
+network/  networks  newt/
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# less /etc/network/i
+if-down.d/      if-pre-up.d/    interfaces
+if-post-down.d/ if-up.d/        interfaces.d/
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# less /etc/network/interfaces
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# nano /etc/network/interfaces
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifdown ra0
+Internet Systems Consortium DHCP Client 4.2.4
+Copyright 2004-2012 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+
+Listening on LPF/ra0/00:0d:a3:22:16:a8
+Sending on   LPF/ra0/00:0d:a3:22:16:a8
+Sending on   Socket/fallback
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifup ra0
+Internet Systems Consortium DHCP Client 4.2.4
+Copyright 2004-2012 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+
+Listening on LPF/ra0/00:0d:a3:22:16:a8
+Sending on   LPF/ra0/00:0d:a3:22:16:a8
+Sending on   Socket/fallback
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 3 (xid=0x3ed4b21c)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 8 (xid=0x3ed4b21c)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 9 (xid=0x3ed4b21c)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 16 (xid=0x3ed4b21c)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 14 (xid=0x3ed4b21c)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 7 (xid=0x3ed4b21c)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 10 (xid=0x3ed4b21c)
+sudo apt-get install ethtool
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 17 (xid=0x3ed4b21c)
+^C
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# sudo apt-get install ethtool
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+The following NEW packages will be installed:
+  ethtool
+0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
+Need to get 84.5 kB of archives.
+After this operation, 284 kB of additional disk space will be used.
+Err http://ports.ubuntu.com/ubuntu-ports/ trusty/main ethtool armhf 1:3.13-1
+  Could not resolve 'ports.ubuntu.com'
+E: Failed to fetch http://ports.ubuntu.com/ubuntu-ports/pool/main/e/ethtool/ethtool_3.13-1_armhf.deb  Could not resolve 'ports.ubuntu.com'
+
+E: Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# sudo apt-get update
+Err http://packages.ros.org raring InRelease
+
+Err http://repos.rcn-ee.net trusty InRelease
+
+Err http://ports.ubuntu.com trusty InRelease
+
+Err http://ports.ubuntu.com trusty-updates InRelease
+
+Err http://repos.rcn-ee.net trusty Release.gpg
+  Could not resolve 'repos.rcn-ee.net'
+Err http://packages.ros.org raring Release.gpg
+  Could not resolve 'packages.ros.org'
+Err http://ports.ubuntu.com trusty Release.gpg
+  Could not resolve 'ports.ubuntu.com'
+Err http://ports.ubuntu.com trusty-updates Release.gpg
+  Could not resolve 'ports.ubuntu.com'
+^Croot@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# sudo ifconfiga0 netmask 255.255.0.0
+SIOCSIFNETMASK: Cannot assign requested address
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# lshw
+arm
+    description: Computer
+    product: TI AM335x BeagleBone
+    width: 32 bits
+  *-core
+       description: Motherboard
+       physical id: 0
+       capabilities: ti_am335x-bone ti_am33xx
+     *-cpu
+          description: CPU
+          product: cpu
+          physical id: 0
+          bus info: cpu@0
+          size: 300MHz
+          capacity: 300MHz
+          capabilities: cpufreq
+     *-memory
+          description: System memory
+          physical id: 1
+          size: 496MiB
+  *-network:0
+       description: Wireless interface
+       physical id: 1
+       logical name: ra0
+       serial: 00:0d:a3:22:16:a8
+       capabilities: ethernet physical wireless
+       configuration: broadcast=yes driver=RALINK WLAN multicast=yes wireless=Ralink STA
+  *-network:1
+       description: Ethernet interface
+       physical id: 2
+       logical name: eth0
+       serial: d0:39:72:14:ec:5e
+       capabilities: ethernet physical
+       configuration: broadcast=yes driver=TI CPSW Driver v1.0 driverversion=1.0 link=no multicast=yes
+  *-network:2
+       description: Ethernet interface
+       physical id: 3
+       logical name: usb0
+       serial: 02:8d:17:e5:ab:91
+       capabilities: ethernet physical
+       configuration: broadcast=yes driver=g_ether driverversion=29-May-2008 firmware=musb-hdrc ip=192.168.7.2 link=yes multicast=yes
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifconfig
+eth0      Link encap:Ethernet  HWaddr d0:39:72:14:ec:5e
+          UP BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+          Interrupt:40
+
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+ra0       Link encap:Ethernet  HWaddr 00:0d:a3:22:16:a8
+          inet6 addr: fe80::20d:a3ff:fe22:16a8/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:7643 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:539 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:1430846 (1.4 MB)  TX bytes:56068 (56.0 KB)
+
+usb0      Link encap:Ethernet  HWaddr 02:8d:17:e5:ab:91
+          inet addr:192.168.7.2  Bcast:192.168.7.3  Mask:255.255.255.252
+          inet6 addr: fe80::8d:17ff:fee5:ab91/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:1660 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:1698 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:144884 (144.8 KB)  TX bytes:306402 (306.4 KB)
+
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# chmod 0600 /etc/network/interfaces
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifup ra0
+ifup: interface ra0 already configured
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# less /etc/networking/interfaces
+/etc/networking/interfaces: No such file or directory
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# less /etc/network/interfaces
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ls /etc/wpa_supplicant/
+action_wpa.sh  functions.sh  ifupdown.sh
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# nano /etc/wpa_supplicant/wpa_supplicant.conf
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# nano /etc/network/interfaces
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifup ra0
+ifup: interface ra0 already configured
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifdown ra0
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifup ra0
+wpa_supplicant: /sbin/wpa_supplicant daemon failed to start
+run-parts: /etc/network/if-pre-up.d/wpasupplicant exited with return code 1
+Failed to connect to non-global ctrl_ifname: ra0  error: No such file or directory
+wpa_supplicant: /sbin/wpa_cli daemon failed to start
+run-parts: /etc/network/if-up.d/wpasupplicant exited with return code 1
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# lspci -nn | grep 0280
+bash: lspci: command not found
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# nano /etc/network/interfaces
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifup ra0       ifup: interface ra0 already configured
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifdown ra0
+Internet Systems Consortium DHCP Client 4.2.4
+Copyright 2004-2012 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+
+Listening on LPF/ra0/00:0d:a3:22:16:a8
+Sending on   LPF/ra0/00:0d:a3:22:16:a8
+Sending on   Socket/fallback
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifup ra0
+Internet Systems Consortium DHCP Client 4.2.4
+Copyright 2004-2012 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+
+Listening on LPF/ra0/00:0d:a3:22:16:a8
+Sending on   LPF/ra0/00:0d:a3:22:16:a8
+Sending on   Socket/fallback
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 3 (xid=0x5dc78844)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 6 (xid=0x5dc78844)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 9 (xid=0x5dc78844)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 21 (xid=0x5dc78844)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 7 (xid=0x5dc78844)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 14 (xid=0x5dc78844)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 16 (xid=0x5dc78844)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 15 (xid=0x5dc78844)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 16 (xid=0x5dc78844)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 18 (xid=0x5dc78844)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 19 (xid=0x5dc78844)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 20 (xid=0x5dc78844)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 13 (xid=0x5dc78844)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 21 (xid=0x5dc78844)
+^C
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifconfig ra0 up
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# dhclient ra0
+^C
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# nano /etc/network/interfaces
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifdown ra0
+Internet Systems Consortium DHCP Client 4.2.4
+Copyright 2004-2012 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+
+Listening on LPF/ra0/00:0d:a3:22:16:a8
+Sending on   LPF/ra0/00:0d:a3:22:16:a8
+Sending on   Socket/fallback
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifup ra0
+Internet Systems Consortium DHCP Client 4.2.4
+Copyright 2004-2012 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+
+Listening on LPF/ra0/00:0d:a3:22:16:a8
+Sending on   LPF/ra0/00:0d:a3:22:16:a8
+Sending on   Socket/fallback
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 3 (xid=0x4777c9a1)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 6 (xid=0x4777c9a1)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 10 (xid=0x4777c9a1)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 8 (xid=0x4777c9a1)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 9 (xid=0x4777c9a1)
+^C
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifdown ra0
+Internet Systems Consortium DHCP Client 4.2.4
+Copyright 2004-2012 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+
+Listening on LPF/ra0/00:0d:a3:22:16:a8
+Sending on   LPF/ra0/00:0d:a3:22:16:a8
+Sending on   Socket/fallback
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# nano /etc/network/interfaces
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# nano /etc/network/interfaces
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# nano /etc/network/interfaces
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifdown ra0     ifdown: interface ra0 not configured
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifup ra0       Internet Systems Consortium DHCP Client 4.2.4
+Copyright 2004-2012 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+
+Listening on LPF/ra0/00:0d:a3:22:16:a8
+Sending on   LPF/ra0/00:0d:a3:22:16:a8
+Sending on   Socket/fallback
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 3 (xid=0x6d69879e)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 4 (xid=0x6d69879e)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 7 (xid=0x6d69879e)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 11 (xid=0x6d69879e)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 16 (xid=0x6d69879e)
+^C
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# nano /etc/network/interfaces
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifdown ra0     Internet Systems Consortium DHCP Client 4.2.4
+Copyright 2004-2012 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+
+Listening on LPF/ra0/00:0d:a3:22:16:a8
+Sending on   LPF/ra0/00:0d:a3:22:16:a8
+Sending on   Socket/fallback
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifup ra0       Internet Systems Consortium DHCP Client 4.2.4
+Copyright 2004-2012 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+
+Listening on LPF/ra0/00:0d:a3:22:16:a8
+Sending on   LPF/ra0/00:0d:a3:22:16:a8
+Sending on   Socket/fallback
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 3 (xid=0x6d4d3ec2)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 8 (xid=0x6d4d3ec2)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 21 (xid=0x6d4d3ec2)
+^C
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# wpa_supplicant  salvador
+Successfully initialized wpa_supplicant
+wpa_supplicant v2.1
+Copyright (c) 2003-2014, Jouni Malinen <j@w1.fi> and contributors
+
+This software may be distributed under the terms of the BSD license.
+See README for more details.
+
+This product includes software developed by the OpenSSL Project
+for use in the OpenSSL Toolkit (http://www.openssl.org/)
+
+usage:
+  wpa_supplicant [-BddhKLqqstuvW] [-P<pid file>] [-g<global ctrl>] \
+        [-G<group>] \
+        -i<ifname> -c<config file> [-C<ctrl>] [-D<driver>] [-p<driver_param>] \
+        [-b<br_ifname>] [-e<entropy file>] [-f<debug file>] \
+        [-o<override driver>] [-O<override ctrl>] \
+        [-N -i<ifname> -c<conf> [-C<ctrl>] [-D<driver>] \
+        [-p<driver_param>] [-b<br_ifname>] [-I<config file>] ...]
+
+drivers:
+  nl80211 = Linux nl80211/cfg80211
+  wext = Linux wireless extensions (generic)
+  wired = Wired Ethernet driver
+  none = no driver (RADIUS server/WPS ER)
+options:
+  -b = optional bridge interface name
+  -B = run daemon in the background
+  -c = Configuration file
+  -C = ctrl_interface parameter (only used if -c is not)
+  -i = interface name
+  -I = additional configuration file
+  -d = increase debugging verbosity (-dd even more)
+  -D = driver name (can be multiple drivers: nl80211,wext)
+  -e = entropy file
+  -f = log output to debug file instead of stdout
+  -g = global ctrl_interface
+  -G = global ctrl_interface group
+  -K = include keys (passwords, etc.) in debug output
+  -s = log output to syslog instead of stdout
+  -t = include timestamp in debug messages
+  -h = show this help text
+  -L = show license (BSD)
+  -o = override driver parameter for new interfaces
+  -O = override ctrl_interface parameter for new interfaces
+  -p = driver parameters
+  -P = PID file
+  -q = decrease debugging verbosity (-qq even less)
+  -u = enable DBus control interface
+  -v = show version
+  -W = wait for a control interface monitor before starting
+  -N = start describing new interface
+example:
+  wpa_supplicant -Dnl80211 -iwlan0 -c/etc/wpa_supplicant.conf
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916#
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916#
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# nano /etc/network/interfaces
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifdown ra0     Internet Systems Consortium DHCP Client 4.2.4
+Copyright 2004-2012 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+
+Listening on LPF/ra0/00:0d:a3:22:16:a8
+Sending on   LPF/ra0/00:0d:a3:22:16:a8
+Sending on   Socket/fallback
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# ifup ra0       Internet Systems Consortium DHCP Client 4.2.4
+Copyright 2004-2012 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+
+Listening on LPF/ra0/00:0d:a3:22:16:a8
+Sending on   LPF/ra0/00:0d:a3:22:16:a8
+Sending on   Socket/fallback
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 3 (xid=0xd873465)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 6 (xid=0xd873465)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 15 (xid=0xd873465)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 15 (xid=0xd873465)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 13 (xid=0xd873465)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 15 (xid=0xd873465)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 11 (xid=0xd873465)
+DHCPREQUEST of 192.168.43.59 on ra0 to 255.255.255.255 port 67 (xid=0xd873465)
+DHCPOFFER of 192.168.43.59 from 192.168.43.1
+DHCPREQUEST of 192.168.43.59 on ra0 to 255.255.255.255 port 67 (xid=0xd873465)
+DHCPREQUEST of 192.168.43.59 on ra0 to 255.255.255.255 port 67 (xid=0xd873465)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 3 (xid=0x7e1b2399)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 8 (xid=0x7e1b2399)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 13 (xid=0x7e1b2399)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 18 (xid=0x7e1b2399)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 9 (xid=0x7e1b2399)
+DHCPREQUEST of 192.168.43.59 on ra0 to 255.255.255.255 port 67 (xid=0x7e1b2399)
+DHCPOFFER of 192.168.43.59 from 192.168.43.1
+DHCPREQUEST of 192.168.43.59 on ra0 to 255.255.255.255 port 67 (xid=0x7e1b2399)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 3 (xid=0x20988354)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 7 (xid=0x20988354)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 11 (xid=0x20988354)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 18 (xid=0x20988354)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 17 (xid=0x20988354)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 20 (xid=0x20988354)
+DHCPREQUEST of 192.168.43.59 on ra0 to 255.255.255.255 port 67 (xid=0x20988354)
+DHCPOFFER of 192.168.43.59 from 192.168.43.1
+DHCPREQUEST of 192.168.43.59 on ra0 to 255.255.255.255 port 67 (xid=0x20988354)
+DHCPREQUEST of 192.168.43.59 on ra0 to 255.255.255.255 port 67 (xid=0x20988354)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 3 (xid=0x465a4c35)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 5 (xid=0x465a4c35)
+DHCPREQUEST of 192.168.43.59 on ra0 to 255.255.255.255 port 67 (xid=0x465a4c35)
+DHCPOFFER of 192.168.43.59 from 192.168.43.1
+DHCPREQUEST of 192.168.43.59 on ra0 to 255.255.255.255 port 67 (xid=0x465a4c35)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 3 (xid=0x492bdcc0)
+DHCPREQUEST of 192.168.43.59 on ra0 to 255.255.255.255 port 67 (xid=0x492bdcc0)
+DHCPOFFER of 192.168.43.59 from 192.168.43.1
+DHCPREQUEST of 192.168.43.59 on ra0 to 255.255.255.255 port 67 (xid=0x492bdcc0)
+DHCPREQUEST of 192.168.43.59 on ra0 to 255.255.255.255 port 67 (xid=0x492bdcc0)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 3 (xid=0x46b6e88)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 3 (xid=0x46b6e88)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 8 (xid=0x46b6e88)
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 13 (xid=0x46b6e88)
+DHCPREQUEST of 192.168.43.59 on ra0 to 255.255.255.255 port 67 (xid=0x46b6e88)
+DHCPOFFER of 192.168.43.59 from 192.168.43.1
+DHCPACK of 192.168.43.59 from 192.168.43.1
+bound to 192.168.43.59 -- renewal in 1618 seconds.
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916#
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916#
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916#
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916# sudo apt-get update
+Ign http://ports.ubuntu.com trusty InRelease
+Get:1 http://packages.ros.org raring InRelease [4,028 B]
+Ign http://ports.ubuntu.com trusty-updates InRelease
+Hit http://ports.ubuntu.com trusty Release.gpg
+Get:2 http://ports.ubuntu.com trusty-updates Release.gpg [933 B]
+Hit http://ports.ubuntu.com trusty Release
+Get:3 http://packages.ros.org raring/main armhf Packages [4,314 B]
+Get:4 http://repos.rcn-ee.net trusty InRelease [1,782 B]
+Get:5 http://repos.rcn-ee.net trusty/main armhf Packages [15.1 kB]
+Ign http://packages.ros.org raring/main Translation-en_US
+Ign http://packages.ros.org raring/main Translation-en
+Ign http://ports.ubuntu.com trusty-updates Release
+Hit http://ports.ubuntu.com trusty/main armhf Packages
+Hit http://ports.ubuntu.com trusty/universe armhf Packages
+Hit http://ports.ubuntu.com trusty/multiverse armhf Packages
+Get:6 http://repos.rcn-ee.net trusty/main armhf Packages [15.1 kB]
+Get:7 http://ports.ubuntu.com trusty/multiverse Translation-en [123 kB]
+14% [7 Translation-en 1,138 B/123 kB 1%] [6 Packages 9,231 B/15.1 kB 61%]
+
+14% [7 Translation-en 1,138 B/123 kB 1%] [6 Packages 9,231 B/15.1 kB 61%]
+
+14% [7 Translation-en 1,138 B/123 kB 1%] [6 Packages 9,231 B/15.1 kB 61%]
+14% [7 Translation-en 1,138 B/123 kB 1%] [6 Packages 9,231 B/15.1 kB 61%]
+
+Err http://repos.rcn-ee.net trusty/main armhf Packages
+  Unable to connect to repos.rcn-ee.net:http:
+Err http://repos.rcn-ee.net trusty/main Translation-en_US
+  Unable to connect to repos.rcn-ee.net:http:
+Err http://repos.rcn-ee.net trusty/main Translation-en
+  Unable to connect to repos.rcn-ee.net:http:
+Get:8 http://ports.ubuntu.com trusty/multiverse Translation-en [123 kB]
+Get:9 http://ports.ubuntu.com trusty/universe Translation-en [5,063 kB]
+Get:10 http://ports.ubuntu.com trusty-updates/main armhf Packages [306 kB]
+Get:11 http://ports.ubuntu.com trusty-updates/universe armhf Packages [210 kB]
+Get:12 http://ports.ubuntu.com trusty-updates/multiverse armhf Packages [6,637 B]
+Get:13 http://ports.ubuntu.com trusty-updates/main Translation-en [149 kB]
+Get:14 http://ports.ubuntu.com trusty-updates/multiverse Translation-en [4,118 B]
+Get:15 http://ports.ubuntu.com trusty-updates/universe Translation-en [98.7 kB]
+Get:16 http://ports.ubuntu.com trusty/main Translation-en [762 kB]
+Ign http://ports.ubuntu.com trusty/main Translation-en_US
+Ign http://ports.ubuntu.com trusty/multiverse Translation-en_US
+Ign http://ports.ubuntu.com trusty/universe Translation-en_US
+Ign http://ports.ubuntu.com trusty-updates/main Translation-en_US
+Ign http://ports.ubuntu.com trusty-updates/multiverse Translation-en_US
+Ign http://ports.ubuntu.com trusty-updates/universe Translation-en_US
+Fetched 6,732 kB in 11min 22s (9,867 B/s)
+W: Failed to fetch http://repos.rcn-ee.net/ubuntu/dists/trusty/main/binary-armhf/Packages  Unable to connect to repos.rcn-ee.net:http:
+
+W: Failed to fetch http://repos.rcn-ee.net/ubuntu/dists/trusty/main/i18n/Translation-en_US  Unable to connect to repos.rcn-ee.net:http:
+
+W: Failed to fetch http://repos.rcn-ee.net/ubuntu/dists/trusty/main/i18n/Translation-en  Unable to connect to repos.rcn-ee.net:http:
+
+E: Some index files failed to download. They have been ignored, or old ones used instead.
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916#
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916#
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916#
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916#
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916#
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916#
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916#
+root@arm:/home/ubuntu/driver/mt7610u_wifi_sta_v3002_dpo_20130916#
+

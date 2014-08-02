@@ -1,0 +1,6 @@
+#!/bin/sh
+mkdir -p /etc/Wireless/RT2870STA/
+wget https://rcn-ee.net/deb/trusty-armhf/v3.8.13-bone59/RT2870STA.dat -O /etc/Wireless/RT2870STA/RT2870STA.dat
+mkdir -p /lib/modules/3.8.13-bone59/kernel/drivers/net/wireless/
+wget https://rcn-ee.net/deb/trusty-armhf/v3.8.13-bone59/mt7601Usta.ko -O /lib/modules/3.8.13-bone59/kernel/drivers/net/wireless/mt7601Usta.ko
+echo "mt7601Usta" > /etc/modules-load.d/mt7601.conf
