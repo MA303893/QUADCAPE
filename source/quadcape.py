@@ -16,11 +16,12 @@ import telemetry
 print"Importing kbhit.py     "
 time.sleep(1/6)
 #import pwm
-import kbhit
 import os
 import sys 
 import signal 
 import pwm
+import menu
+
 """
 import os, sys, inspect
 # realpath() will make your script run, even if you symlink it :)
@@ -39,6 +40,9 @@ import mymodule
 	 """
 
 print "Loading user variables"
+################################################################################
+#					USER VARIABLES
+################################################################################
 #pid coefficients
 pid_P_accel=31
 pid_I_accel=35
@@ -51,27 +55,9 @@ pid_D_gyro= 0
 gx_os=0 #in degrees/sec
 gy_os=0
 gz_os=0            
-
 ax_os=0 #in Gs 
 ay_os=0
 az_os=0
-
-
-#devices
-print "Initializing accelerometer"
-Accel=i2c.accel()
-time.sleep(1/6)
-print "Initializing gyroscope"
-Gyro=i2c.gyro()
-time.sleep(1/6)
-print "Initializing pid controllers"
-gx=pid.PID(pid_P_gyro,pid_I_gyro,pid_D_gyro)
-gy=pid.PID(pid_P_gyro,pid_I_gyro,pid_D_gyro)
-gz=pid.PID(pid_P_gyro,pid_I_gyro,pid_D_gyro)
-ax=pid.PID(pid_P_gyro,pid_I_gyro,pid_D_gyro)
-ay=pid.PID(pid_P_gyro,pid_I_gyro,pid_D_gyro)
-az=pid.PID(pid_P_gyro,pid_I_gyro,pid_D_gyro)
-
 
 #set_points
 gx_sp=0
@@ -81,105 +67,106 @@ ax_sp=0
 ay_sp=0
 az_sp=1
 
-gx.setPoint(gx_sp)
-gy.setPoint(gy_sp)
-gz.setPoint(gz_sp)
-ax.setPoint(ax_sp)
-ax.setPoint(ax_sp)
-ax.setPoint(ax_sp)
-
-
 #throttle
 THROTTLE=0
-#pwm max speeds
-PWM_MAX=300
+
+#ratios for motor speed
+MOTOR_SPEED_RATIO_throttle=.5
+MOTOR_SPEED_RATIO_gyro=0
+MOTOR_SPEED_RATIO_accel=6					
+MOTOR_SPEED_RATIO_enable_z=0
+base_speed=150
+MAX_SPEED=800
 #####################################################################################
 
-def print_header():
-	print "*" * 80
-	print " " * 35+"Welcome to"
-	print "*" * 80
-	print " " * 12 +"   ___  _   _   _    ____   ____    _    ____  _____"
-	print " " * 12 +"  / _ \| | | | / \  |  _ \ / ___|  / \  |  _ \| ____|"
-	print " " * 12 +" | | | | | | |/ _ \ | | | | |     / _ \ | |_) |  _|  "
-	print " " * 12 +" | |_| | |_| / ___ \| |_| | |___ / ___ \|  __/| |___ "
-	print " " * 12 +"  \__\_\\___/_/   \_\____/ \____/_/   \_\_|   |_____|"
-	print "*" * 80
-	print " " * 32 + "Raising innovation"
-	print "*" * 80
+ 
+#####################MENUS#####################################################
+welcome_menu	=0
+main_menu=0
+tuning_menu=0
+test_tuning_menu=0
+#quadcape_menu.welcome_menu.display()
+#quadcape_menu.main_menu.display()
+#quadcape_menu.tuning_menu.display()
+def init_menus():	
+	global welcome_menu	
+	global main_menu
+	global tuning_menu
+	global test_tuning_menu
+	#welcome
+	welcome_menu=menu.submenu("The system is ready to use.",["                   Press enter"],[0],['*'])
+	welcome_menu.PRINT_ON_REFRESH=0
+	welcome_menu.CLEAR_ON_REFRESH=0
+	#main menu
+	main_menu=menu.submenu("MAIN MENU",["RUN: Press R","CALIBRATION: Press C","SENSOR DIAGNOSTICS: Press S","BATTERY DIAGNOSTICS: Press B","TUNING: Press T","VISION: Press V","HELP: Press H","EXIT: Press E or SPACE" ],[f_run,f_calibrate,f_sensor,f_battery,f_tuning, f_vision,f_help,f_exit,f_exit], ["R","C","S","B","T","V","H","E"," "])
+	main_menu.PRINT_ON_REFRESH=0
+	main_menu.CLEAR_ON_REFRESH=0
 	
+	menu_list=["Display all tuning parameters: 0","UPDATE PID:","   Gyro P:     1","   Gyro I:     2","   Gyro D:     3","   ACCEL P:    4","   ACCEL I:    5","   ACCEL D:    6","Max speed:     7","Base speed:    8","RATIOS:","     throttle: a","     enable_z: s","     gyro:     d","     accel:    f","","TEST: T","Main menu: M","Back: B","Exit: E"]
+	menu_functions=[tuning_menu_f1,tuning_menu_f2,tuning_menu_f3,tuning_menu_f4,tuning_menu_f5,tuning_menu_f6,lambda: update_pid("Max speed",""),lambda: update_pid("base speed",""),tuning,menu.back,f_exit,0,lambda: update_pid("",""),lambda: update_pid("ratio","throttle"),lambda: update_pid("ratio","enable_z"),lambda: update_pid("ratio","gyro"),lambda: update_pid("ratio","accel")]
+	tuning_menu=menu.submenu("TUNING",menu_list,menu_functions,["1","2","3","4","5","6","7","8","t","b","e","m","0","a","s","d","f"])
+	#print_main_menu("TUNING",["START: s","GYRO: gp gi gd", "ACCEL: ap ai ad","THROTTLE+: t","THROTTLE-: h","EXIT: e"])
+	tuning_menu.IDLE_FUNCTION=idle_tuning
+	tuning_menu.USE_BANNER=0
+	#tuning test
+	test_tuning_menu=menu.submenu("Test Tuning with current PID values",["Throttle: +10 press 5","          +1  press t","          -1  press g","          -10 press b","back: press SPACE"],[throttlepp,throttlep,throttlem,throttlemm,menu.back],["5","t","g","b"," "])
+	test_tuning_menu.ONCE_FUNCTION=lambda: start_motors(.1,base_speed)
+	test_tuning_menu.IDLE_FUNCTION=run
+	test_tuning_menu.USE_BANNER=0
+	test_tuning_menu.PRINT_ON_REFRESH=0
+	test_tuning_menu.CLEAR_ON_REFRESH=0
 	
 
-#update_set_points()
-def run():
-	global data_gx
-	global data_gy
-	global data_gz
-	global Gyro
-	global data_ax
-	global data_ay
-	global data_az
-	global Accel
-	global gx_os
-	global gy_os
-	global data_gz
-	global gz_os
+	#run_menu=menu.submenu("RUN",[]
+############################################################################
+def tuning_menu_f1()  : update_pid("g","p")
+def tuning_menu_f2()  : update_pid("g","i")
+def tuning_menu_f3()  : update_pid("g","d")
+def tuning_menu_f4()  : update_pid("a","p")
+def tuning_menu_f5()  : update_pid("a","i")
+def tuning_menu_f6()  : update_pid("a","d")
+def throttlepp() : 
 	global THROTTLE
-		
-		
-	while 1:
-		data_gx,data_gy,data_gz,t=Gyro.get() #degrees/sec
-		data_ax,data_ay,data_az=Accel.get() #in G 
-		data_gx,data_gy,data_gz=data_gx+gx_os,data_gy+gy_os,data_gz+gz_os
-		data_ax,data_ay,data_az=data_ax+ax_os,data_ay+ay_os,data_az+az_os
-		#update_set_points()
-		
-		if kbhit.kbhit()>0:
-			char=kbhit.getch().lower()
-			if ' ' in char:
-				print "SIGNAL: user abort"
-				THROTTLE=0
-				break 
-			if '\n' in char:
-				THROTTLE =0
-			if 'w' in char:
-				THROTTLE +=1
-			if 's' in char:
-				THROTTLE -=1
-			if '2' in char:
-				THROTTLE +=10
-			if 'x' in char:
-				THROTTLE -=10
-			print "Throttle: ",
-			print THROTTLE
-			
-		#update pid
-def user_menu():
-	MENU=1 
-	while MENU==1:
-		os.system("clear")
-		print_header()
-		print_main_menu("OPTIONS",["Run","Calibration","Sensor Diagnostics","Tuning","Vision","Help","Exit"])
-		noresponse=1
-		while noresponse:
-
-			if kbhit.kbhit()>0:
-				char=kbhit.getch().lower()				
-				if char=='t':
-					print "tuning"
-					tuning()
-				if char =='r':
-					print "run"
-					run()
-				if char=="e":
-					MENU=0
-					kbhit.restore_stdin()
-					break
-				#more menu items
-				noresponse=0				
-	return
+	THROTTLE+=10
+def throttlep () : 
+	global THROTTLE
+	THROTTLE+=1
+def throttlem () :  
+	global THROTTLE
+	THROTTLE-=1
+def throttlemm() :  
+	global THROTTLE
+	THROTTLE-=10
 
 def tuning():
+	test_tuning_menu.display()
+	
+def f_exit():
+	menu.restore_stdin()
+	print "User exit.\nRestoring stdin\nThank you for using Quadcape."
+	exit()
+	return	
+def f_calibrate():
+	return
+def f_run():
+	return
+def f_sensor():
+	return
+def f_battery():
+	return
+def f_tuning(): 
+	tuning_menu.display()
+	return
+def f_vision():
+	return
+def f_help():
+	return
+	
+	
+#end quadcape menus########################
+
+
+def idle_tuning():
 	global data_gx
 	global data_gy
 	global data_gz
@@ -201,266 +188,103 @@ def tuning():
 	global pid_D_gyro
 	global pwm
 	
-	os.system("clear")
-	print_header()
-	print_main_menu("TUNING",["START: s","GYRO: gp gi gd", "ACCEL: ap ai ad","THROTTLE+: t","THROTTLE-: h","EXIT: e"])
-	notstart=1
-	while notstart:
-		if kbhit.getch()=='s' or kbhit.getch()=='S':
-			break
-	print "                               Choose an item above"
-	
-	while 1:
-		data_gx,data_gy,data_gz,t=Gyro.get() #degrees/sec
-		data_ax,data_ay,data_az=Accel.get() #in G 
-		data_gx,data_gy,data_gz=data_gx+gx_os,data_gy+gy_os,data_gz+gz_os
-		data_ax,data_ay,data_az=data_ax+ax_os,data_ay+ay_os,data_az+az_os
-		#update_set_points()
-		MAX_SPEED=0
-		if kbhit.kbhit()>0:
-			char=kbhit.getch().lower()
-			if 'e' in char:
-				print "exit"
-				THROTTLE=0
-				tuning()
-				break 
-			if ' ' in char:
-				print "SIGNAL: user abort"
-				THROTTLE=0
-				tuning()
-				break 				
-			if '\n' in char:
-				THROTTLE =0
-				
-			if 't' in char:
-				THROTTLE +=1
-			if 'h' in char:
-				THROTTLE -=1
-			if 'g' in char:
-				char=kbhit.getch()
-				update_pid("g",char)
-			if 'a' in char:
-				char=kbhit.getch()
-				update_pid("a",char)
-			if 'p' in char:
-				MAX_SPEED+=10
-			if ';' in char:
-				MAX_SPEED+=1
-			if '/' in char:
-				MAX_SPEED-=10 
-				
-			os.system("clear")
-			print_main_menu("TUNING",["RUN: r","GYRO: gp gi gd", "ACCEL: ap ai ad","THROTTLE: t","EXIT: e","help: h"])
-			print "Accel: P ={} I={} D={}                GYR0:  P ={} I={} D={} ".format(pid_P_accel,pid_I_accel,pid_D_accel,pid_P_gyro,pid_I_gyro,pid_D_gyro)
-			print "Throttle: ",
-			print THROTTLE
-			gx.setPoint(gx_sp)
-			gy.setPoint(gy_sp)
-			gz.setPoint(gz_sp)
-			ax.setPoint(ax_sp)
-			ax.setPoint(ax_sp)
-			ax.setPoint(ax_sp)
-			
-			data_gx,data_gy,data_gz,t=Gyro.get() #degrees/sec
-			data_ax,data_ay,data_az=Accel.get() #in G 
-			print "Accel: \n{} \n{} \n{} \nGyro: \n{} \n{} \n{}".format(data_ax,data_ay,data_az,data_gx,data_gy,data_gz)
-				
-			#quick run
-			if 'r' in char:
-				tune=1
-				os.system("clear")
-				print "running..."
-				print "Throttle:5++ t+ h- n-- Enter=0  SPACE stop"
-				THROTTLE=100
-				LEDs=0
-				pwm_br =150
-				pwm_bl =150
-				pwm_fl =150
-				pwm_fr =150
-				br_err=0
-				bl_err = 0
-				fl_err =0 
-				fr_err = 0 
-				
-				print "Starting advanced current auto-balance algorithms..."
-				time.sleep(.3)
-				print "INITIALIZING: Motor 1, Back right"
-				pwm.changeSpeed1(pwm_br)
-				#time.sleep(.8)
-				print "INITIALIZING: Motor 2, Front right"
-				pwm.changeSpeed2(pwm_fr)
-				#time.sleep(.8)	
-				pwm.changeSpeed4(pwm_fl)
-				print "INITIALIZING: Motor 3, Front left"
-				time.sleep(.8)
-				pwm.changeSpeed3(pwm_bl)
-				print "INITIALIZING: Motor 4, Back left"
-				print "All motors safetly initialized"
-				time.sleep(.8)	
-				
-				MAX_SPEED=1500
-					
-				base_speed=180	
-				print "MAX_SPEED  {}  \nTHROTTLE: {}  \nbr {} \nfr {} \nbl {} \nfl {}".format(MAX_SPEED,THROTTLE,pwm_br,pwm_fr,pwm_bl,pwm_fl)
-				while tune:
-					#os.system("clear")
-					#print "running..."
-					#print "Throttle:5++ t+ h- n-- MAX_SPEED: +10 p, +1 :, -10 / \nEnter=0  SPACE stop"
-					"""
-					print "MAX_SPEED  {}  \nTHROTTLE: {}  \nbr {} \nfr {} \nbl {} \nfl {}".format(MAX_SPEED,THROTTLE,pwm_br,pwm_fr,pwm_bl,pwm_fl)
-					if br_err>0:
-						print "ERROR, backright max speed error"
-					if bl_err>0:
-						print "ERROR, backleft max speed error"
-					if fr_err>0:
-						print "ERROR, frontright max speed error"
-					if fl_err>0:
-						print "ERROR, frontleft max speed error"
-					"""
-					data_gx,data_gy,data_gz,t=Gyro.get() #degrees/sec
-					data_ax,data_ay,data_az=Accel.get() #in G 	
-					data_gx,data_gy,data_gz=data_gx+gx_os,data_gy+gy_os,data_gz+gz_os
-					data_ax,data_ay,data_az=data_ax+ax_os,data_ay+ay_os,data_az+az_os
-					
-					gx_up=gx.update(data_gx)
-					gy_up=gy.update(data_gy)
-					gz_up=gz.update(data_gz)
-					ax_up=ax.update(data_ax)
-					ay_up=ay.update(data_ay)
-					az_up=az.update(data_az)
-					
-					#decide ratios
-					pwm_br =base_speed+.5*THROTTLE+0*(-.3*gx_up-.3*gy_up-0*gz_up)  +12*(-.5*ax_up +.5* ay_up+0* az_up)
-					pwm_bl =base_speed+.5*THROTTLE+0*(-.3*gx_up+.3*gy_up+0*gz_up)  +12*(+.5*ax_up +.5* ay_up+0* az_up)
-					pwm_fl =base_speed+.5*THROTTLE+0*(+.3*gx_up+.3*gy_up-0*gz_up)  +12*(+.5*ax_up -.5* ay_up+0* az_up)
-					pwm_fr =base_speed+.5*THROTTLE+0*(+.3*gx_up-.3*gy_up+0*gz_up)  +12*(-.5*ax_up -.5* ay_up+0* az_up)
-						
-					#errors
-					br_err=0
-					bl_err = 0
-					fl_err =0 
-					fr_err = 0 
-					
-						
-					if pwm_br>MAX_SPEED:
-						br_err=1
-						pwm_br=MAX_SPEED
-					if pwm_bl>MAX_SPEED:
-						bl_err = 1						
-						pwm_bl=MAX_SPEED
-					if pwm_fl>MAX_SPEED:
-						fl_err =1 
-						pwm_fl=MAX_SPEED
-					if pwm_fr>MAX_SPEED:
-						fr_err = 1 
-						pwm_fr=MAX_SPEED
-					
-					
-					
-					#update motors` 
-					#P8_13 PWM Back Right	PWM1	
-					#P8_19 PWM Front RIght	PWM2
-					#P9_14 PWM Back Left	PWM3
-					#P9_16 PWM Front Left	PWM4
-					pwm.changeSpeed1(pwm_br)
-				
-					pwm.changeSpeed2(pwm_fr)
-					
-					pwm.changeSpeed3(pwm_bl)
-					
-					pwm.changeSpeed4(pwm_fl)
-				
-					
-					if kbhit.kbhit()>0:
-						char=kbhit.getch().lower()
-						if ' ' in char:
-							print "SIGNAL: user abort"
-							THROTTLE=0
-							tune=0
-							pwm.stop()
-							break 				
-						if '\n' in char:
-							THROTTLE =0
-							
-						if 't' in char:
-							THROTTLE +=1
-						if 'h' in char:
-							THROTTLE -=1
-						if '5' in char:
-							THROTTLE +=1
-						if 'n' in char:
-							THROTTLE -=10
-						if 'p' in char:
-							MAX_SPEED+=10
-						if ';' in char:
-							MAX_SPEED+=1
-						if '/' in char:
-							MAX_SPEED-=10 
-								
-					if LEDs==0:
-						led.back("0000")
-						LEDs=1 
-					else:
-						led.back("1111")
-						LEDs=0
-			
-			
-	return #tuning
-def update_pid(device,param):
+	data_gx,data_gy,data_gz,t=Gyro.get() #degrees/sec
+	data_ax,data_ay,data_az=Accel.get() #in G 
+	data_gx,data_gy,data_gz=data_gx+gx_os,data_gy+gy_os,data_gz+gz_os
+	data_ax,data_ay,data_az=data_ax+ax_os,data_ay+ay_os,data_az+az_os
+	print "Accel:X:{} \n     Y:{} \n     Z:{} \nGyro: X:{} \n     Y:{} \n     Z:{}".format(data_ax,data_ay,data_az,data_gx,data_gy,data_gz)
+	time.sleep(.1)
+	return #idle_tuning
+
+#run will update the controllers and send the data to the pwms once. 
+def run():
+	global data_gx
+	global data_gy
+	global data_gz
+	global Gyro
+	global data_ax
+	global data_ay
+	global data_az
+	global Accel
+	global gx_os
+	global gy_os
+	global data_gz
+	global gz_os
+	global THROTTLE
 	global pid_P_accel
 	global pid_I_accel
 	global pid_D_accel
 	global pid_P_gyro
 	global pid_I_gyro
 	global pid_D_gyro
-	kbhit.restore_stdin()
-	nonnumber=1
-	print "Accel: P ={} I={} D={}                GYR0:  P ={} I={} D={} ".format(pid_P_accel,pid_I_accel,pid_D_accel,pid_P_gyro,pid_I_gyro,pid_D_gyro)
-	print "Modifying:       "+device+param
-	while nonnumber:
-		print "Enter new value: ",
-		userinput = sys.stdin.readline().rstrip()
-		try:
-			userinpuit=float(userinput)
-			nonnumber=0
-		except ValueError:
-			print "Error:"+userinput+" is not a number"
-	# now we have a new float for the pid			
-	kbhit.unbuffer_stdin()
-	print userinput
-	if device=='a':
-		if param=='i':
-			 pid_I_accel=userinput
-		if param=='p':
-			 pid_P_accel=userinput
-		if param=='d':
-			 pid_D_accel=userinput
-	if device=='g':
-		if param=='i':
-			 pid_I_gyro=userinput
-		if param=='p':
-			 pid_P_gyro=userinput
-		if param=='d':
-			 pid_D_gyro=userinput
+	global pwm
+	global LEDs_flag
+	global base_speed
+	
+	data_gx,data_gy,data_gz,t=Gyro.get() #degrees/sec
+	data_ax,data_ay,data_az=Accel.get() #in G 	
+	data_gx,data_gy,data_gz=data_gx+gx_os,data_gy+gy_os,data_gz+gz_os
+	data_ax,data_ay,data_az=data_ax+ax_os,data_ay+ay_os,data_az+az_os
+	
+	gx_up=gx.update(data_gx)
+	gy_up=gy.update(data_gy)
+	gz_up=gz.update(data_gz)
+	ax_up=ax.update(data_ax)
+	ay_up=ay.update(data_ay)
+	az_up=az.update(data_az)
+	
+	#decide ratios
+	#MOTOR_SPEED_RATIO_throttle
+	#MOTOR_SPEED_RATIO_gyro
+	#MOTOR_SPEED_RATIO_accel					
+	#MOTOR_SPEED_RATIO_enable_z
+	
+	pwm_br =base_speed+MOTOR_SPEED_RATIO_throttle*THROTTLE+(-MOTOR_SPEED_RATIO_gyro*gx_up-MOTOR_SPEED_RATIO_gyro*gy_up-MOTOR_SPEED_RATIO_gyro*MOTOR_SPEED_RATIO_enable_z*gz_up)  +12*(-MOTOR_SPEED_RATIO_accel*ax_up +MOTOR_SPEED_RATIO_accel* ay_up+MOTOR_SPEED_RATIO_accel*MOTOR_SPEED_RATIO_enable_z* az_up)
+	pwm_bl =base_speed+MOTOR_SPEED_RATIO_throttle*THROTTLE+(-MOTOR_SPEED_RATIO_gyro*gx_up+MOTOR_SPEED_RATIO_gyro*gy_up+MOTOR_SPEED_RATIO_gyro*MOTOR_SPEED_RATIO_enable_z*gz_up)  +12*(+MOTOR_SPEED_RATIO_accel*ax_up +MOTOR_SPEED_RATIO_accel* ay_up+MOTOR_SPEED_RATIO_accel*MOTOR_SPEED_RATIO_enable_z* az_up)
+	pwm_fl =base_speed+MOTOR_SPEED_RATIO_throttle*THROTTLE+(+MOTOR_SPEED_RATIO_gyro*gx_up+MOTOR_SPEED_RATIO_gyro*gy_up-MOTOR_SPEED_RATIO_gyro*MOTOR_SPEED_RATIO_enable_z*gz_up)  +12*(+MOTOR_SPEED_RATIO_accel*ax_up -MOTOR_SPEED_RATIO_accel* ay_up+MOTOR_SPEED_RATIO_accel*MOTOR_SPEED_RATIO_enable_z* az_up)
+	pwm_fr =base_speed+MOTOR_SPEED_RATIO_throttle*THROTTLE+(+MOTOR_SPEED_RATIO_gyro*gx_up-MOTOR_SPEED_RATIO_gyro*gy_up+MOTOR_SPEED_RATIO_gyro*MOTOR_SPEED_RATIO_enable_z*gz_up)  +12*(-MOTOR_SPEED_RATIO_accel*ax_up -MOTOR_SPEED_RATIO_accel* ay_up+MOTOR_SPEED_RATIO_accel*MOTOR_SPEED_RATIO_enable_z* az_up)
+		
+	#errors
+	br_err=0
+	bl_err = 0
+	fl_err =0 
+	fr_err = 0 
+	
+		
+	if pwm_br>MAX_SPEED:
+		br_err=1
+		pwm_br=MAX_SPEED
+	if pwm_bl>MAX_SPEED:
+		bl_err = 1						
+		pwm_bl=MAX_SPEED
+	if pwm_fl>MAX_SPEED:
+		fl_err =1 
+		pwm_fl=MAX_SPEED
+	if pwm_fr>MAX_SPEED:
+		fr_err = 1 
+		pwm_fr=MAX_SPEED
+	
+	
+	
+	#update motors` 
+	#P8_13 PWM Back Right	PWM1	
+	#P8_19 PWM Front RIght	PWM2
+	#P9_14 PWM Back Left	PWM3
+	#P9_16 PWM Front Left	PWM4
+	pwm.changeSpeed1(pwm_br)
+	pwm.changeSpeed2(pwm_fr)
+	pwm.changeSpeed3(pwm_bl)
+	pwm.changeSpeed4(pwm_fl)
+	if LEDs_flag==0:
+		led.back("0000")
+		LEDs_flag=1 
+	else:
+		led.back("1111")
+		LEDs_flag=0	
 	return
+###########################end run
 	
-	
-	
-def print_main_menu(title, lines):
-	LINE_LENGTH=48
-	print "\n"+" " *10 + "*"*60+"\n"+" "*10+"*"+" "*26+title+" "*25+"*\n"+" " *10 + "*"*60+"\n"+" "*10+"*"+" "*58+"*\n",
-	for line in lines:
-		print " " *10+"*    ",
-		if len(line)<LINE_LENGTH:
-			print line,
-		else:
-			print line[0:LINE_LENGTH],
-		print " "* (LINE_LENGTH-len(line))+"    *"
-	print " "*10+"*"+" "*58+"*\n"+" " *10 + "*"*60+"\n"
-	return
-
-	
-	
+				
 def update_set_points():
 	global gx_sp
 	global gy_sp
@@ -487,20 +311,141 @@ def update_set_points():
 	ay.setPoint(gx_sp)
 	az.setPoint(gx_sp)
 
-def main():
-	user_menu()
+
+
+
+
+
+def update_pid(device,param):
+	global pid_P_accel
+	global pid_I_accel
+	global pid_D_accel
+	global pid_P_gyro
+	global pid_I_gyro
+	global pid_D_gyro
+	global MAX_SPEED
+	global base_speed
+	global MOTOR_SPEED_RATIO_throttle
+	global MOTOR_SPEED_RATIO_gyro
+	global MOTOR_SPEED_RATIO_accel					
+	global MOTOR_SPEED_RATIO_enable_z
+	menu.restore_stdin()
+	nonnumber=1
+	os.system("clear")
+	print "*"*80
+	print "Modifying PID control:"
+	print "*"*80
+	print "Accel: P ={} \n       I ={} \n       D ={}\nGYR0:  P ={} \n       I ={} \n       D ={} ".format(pid_P_accel,pid_I_accel,pid_D_accel,pid_P_gyro,pid_I_gyro,pid_D_gyro)
+	print "*"*80
+	print "MAX_SPEED= {}                base_speed= {}".format(MAX_SPEED, base_speed)
+	print "*"*80
+	print "pid output - motor speed ratios:\n     throttle: {}\n     gyro: {}\n     Accel: {}\n     enable_z: {}".format( MOTOR_SPEED_RATIO_throttle,MOTOR_SPEED_RATIO_gyro, MOTOR_SPEED_RATIO_accel,MOTOR_SPEED_RATIO_enable_z)
+	print "\n"+"*"*80
+	if device=="" and param=="":
+		print "Press enter"
+		userinput = sys.stdin.readline().rstrip()
+		menu.unbuffer_stdin()
+	else:
+		print "Modifying:"+str(device.upper())+str(param.upper())
+		print "*"*80
+		while nonnumber:
+			print "Enter new value: ",
+			userinput = sys.stdin.readline().rstrip()
+			try:
+				userinpuit=float(userinput)
+				nonnumber=0
+			except ValueError:
+				print "Error:"+userinput+" is not a number"
+		# now we have a new float for the pid			
+		menu.unbuffer_stdin()
+		print userinput
+		if device=='a':
+			if param=='i':
+				 pid_I_accel=userinput
+			if param=='p':
+				 pid_P_accel=userinput
+			if param=='d':
+				 pid_D_accel=userinput
+		elif device=='g':
+			if param=='i':
+				 pid_I_gyro=userinput
+			if param=='p':
+				 pid_P_gyro=userinput
+			if param=='d':
+				 pid_D_gyro=userinput
+		elif device=="max speed":
+			MAX_SPEED=userinput
+		elif device=="base speed":
+			base_speed=userinput
+		elif device=="ratio":
+			if param=="throttle":
+				MOTOR_SPEED_RATIO_throttle=userinput
+			if param=="enable_z":
+				MOTOR_SPEED_RATIO_enable_z=userinput
+			if param=="gyro":
+				MOTOR_SPEED_RATIO_gyro=userinput
+			if param=="accel":
+				MOTOR_SPEED_RATIO_accel=userinput
+			
+	os.system("clear")
+	menu.current()
 	return
 	
+def start_motors(delay,speed):
+	print "Restarting ESCs..."
+	pwm.changeSpeed1(0)
+	pwm.changeSpeed2(0)
+	pwm.changeSpeed3(0)
+	pwm.changeSpeed4(0)
+	print "All motors off."
+	time.sleep(1)
+	print "Starting with delay for current balance"
+	time.sleep(delay)
+	print "INITIALIZING: Motor 1, Back right"
+	pwm.changeSpeed1(int)
+	time.sleep(delay)
+	print "INITIALIZING: Motor 2, Front right"
+	pwm.changeSpeed2(speed)
+	time.sleep(delay)
+	print "INITIALIZING: Motor 3, Front left"
+	time.sleep(delay)	
+	pwm.changeSpeed4(speed)
+	print "INITIALIZING: Motor 4, Back left"
+	pwm.changeSpeed3(speed)
+	time.sleep(delay)	
+	print "All motors initialized"
+				
 
-
+####################################################################
+LEDs_flag=0 #global var for running, do not touch	
 def signal_handler(signal,frame):
 	print "Caught ^C \n"+"Restoring stdin"
-	kbhit.restore_stdin()
+	menu.restore_stdin()
 	exit(0)
 	
 	
-####################################################################	
+#devices
 print "Done importing"
+print "Initializing accelerometer"
+Accel=i2c.accel()
+time.sleep(1/6)
+print "Initializing gyroscope"
+Gyro=i2c.gyro()
+time.sleep(1/6)
+print "Initializing pid controllers"
+gx=pid.PID(pid_P_gyro,pid_I_gyro,pid_D_gyro)
+gy=pid.PID(pid_P_gyro,pid_I_gyro,pid_D_gyro)
+gz=pid.PID(pid_P_gyro,pid_I_gyro,pid_D_gyro)
+ax=pid.PID(pid_P_gyro,pid_I_gyro,pid_D_gyro)
+ay=pid.PID(pid_P_gyro,pid_I_gyro,pid_D_gyro)
+az=pid.PID(pid_P_gyro,pid_I_gyro,pid_D_gyro)
+gx.setPoint(gx_sp)
+gy.setPoint(gy_sp)
+gz.setPoint(gz_sp)
+ax.setPoint(ax_sp)
+ax.setPoint(ax_sp)
+ax.setPoint(ax_sp)
+
 print "Initializing LEDS"
 led.init()
 led.right("01")
@@ -509,9 +454,13 @@ print "Initializing PWM"
 pwm.init()
 pwm=pwm.PWM()
 time.sleep(1/3)
-print_header()
 signal.signal(signal.SIGINT, signal_handler)
-kbhit.unbuffer_stdin()
-print "Press Enter"
-kbhit.getch()
-main()
+print "Initializing menus"
+init_menus()
+menu.unbuffer_stdin()
+welcome_menu.display()
+
+while 1:
+	main_menu.display()
+	print "returned here"
+
