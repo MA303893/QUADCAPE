@@ -102,20 +102,19 @@ def init_menus():
 	main_menu.PRINT_ON_REFRESH=0
 	main_menu.CLEAR_ON_REFRESH=0
 	
-	menu_list=["Display all tuning parameters: 0","UPDATE PID:","   Gyro P:     1","   Gyro I:     2","   Gyro D:     3","   ACCEL P:    4","   ACCEL I:    5","   ACCEL D:    6","Max speed:     7","Base speed:    8","RATIOS:","     throttle: a","     enable_z: s","     gyro:     d","     accel:    f","","TEST: T","Main menu: M","Back: B","Exit: E"]
-	menu_functions=[tuning_menu_f1,tuning_menu_f2,tuning_menu_f3,tuning_menu_f4,tuning_menu_f5,tuning_menu_f6,lambda: update_pid("Max speed",""),lambda: update_pid("base speed",""),tuning,menu.back,f_exit,0,lambda: update_pid("",""),lambda: update_pid("ratio","throttle"),lambda: update_pid("ratio","enable_z"),lambda: update_pid("ratio","gyro"),lambda: update_pid("ratio","accel")]
-	tuning_menu=menu.submenu("TUNING",menu_list,menu_functions,["1","2","3","4","5","6","7","8","t","b","e","m","0","a","s","d","f"])
-	#print_main_menu("TUNING",["START: s","GYRO: gp gi gd", "ACCEL: ap ai ad","THROTTLE+: t","THROTTLE-: h","EXIT: e"])
+	menu_list=["Display all tuning parameters: 0","UPDATE PID:","   Gyro P:     1","   Gyro I:     2","   Gyro D:     3","   ACCEL P:    4","   ACCEL I:    5","   ACCEL D:    6","Max speed:     7","Base speed:    8","RATIOS:","     throttle: a","     enable_z: s","     gyro:     d","     accel:    f","OFFSETS: gx: y    gy: u    gz: i","OFFSETS: ax: o    ay: p    az: [","TEST: T","Main menu: M","Back: B","Exit: E"]
+	menu_functions=[tuning_menu_f1,tuning_menu_f2,tuning_menu_f3,tuning_menu_f4,tuning_menu_f5,tuning_menu_f6,lambda: update_pid("Max speed",""),lambda: update_pid("base speed",""),tuning,0,f_exit,0,lambda: update_pid("",""),lambda: update_pid("ratio","throttle"),lambda: update_pid("ratio","enable_z"),lambda: update_pid("ratio","gyro"),lambda: update_pid("ratio","accel"),lambda: update_pid("g","xos"),lambda: update_pid("g","yos"),lambda: update_pid("g","zos"),lambda: update_pid("a","xos"),lambda: update_pid("a","yos"),lambda: update_pid("a","zos")]
+	tuning_menu=menu.submenu("TUNING",menu_list,menu_functions,["1","2","3","4","5","6","7","8","t","b","e","m","0","a","s","d","f","y","u","i","o","p","["])
 	tuning_menu.IDLE_FUNCTION=idle_tuning
 	tuning_menu.USE_BANNER=0
 	#tuning test
-	test_tuning_menu=menu.submenu("Test Tuning with current PID values",["Throttle: +10 press 5","          +1  press t","          -1  press g","          -10 press b","back: press SPACE"],[throttlepp,throttlep,throttlem,throttlemm,menu.back],["5","t","g","b"," "])
+	test_tuning_menu=menu.submenu("Test Tuning with current PID values",["Throttle: +10 press 5","          +1  press t","          -1  press g","          -10 press b","back: press SPACE"],[throttlepp,throttlep,throttlem,throttlemm,test_tuning_back],["5","t","g","b"," "])
 	test_tuning_menu.ONCE_FUNCTION=lambda: start_motors(.1,base_speed)
 	test_tuning_menu.IDLE_FUNCTION=run
 	test_tuning_menu.USE_BANNER=0
 	test_tuning_menu.PRINT_ON_REFRESH=0
 	test_tuning_menu.CLEAR_ON_REFRESH=0
-	
+	test_tuning_menu.NO_RETURN_AFTER_KEY=1
 
 	#run_menu=menu.submenu("RUN",[]
 ############################################################################
@@ -125,6 +124,10 @@ def tuning_menu_f3()  : update_pid("g","d")
 def tuning_menu_f4()  : update_pid("a","p")
 def tuning_menu_f5()  : update_pid("a","i")
 def tuning_menu_f6()  : update_pid("a","d")
+def test_tuning_back():
+	start_motors(0,0)
+	THROTTLE=0
+	test_tuning_menu.ret()
 def throttlepp() : 
 	global THROTTLE
 	THROTTLE+=10
@@ -186,7 +189,10 @@ def idle_tuning():
 	global pid_P_gyro
 	global pid_I_gyro
 	global pid_D_gyro
-	global pwm
+	global pwm	            
+	global ax_os  
+	global ay_os
+	global az_os
 	
 	data_gx,data_gy,data_gz,t=Gyro.get() #degrees/sec
 	data_ax,data_ay,data_az=Accel.get() #in G 
@@ -220,6 +226,9 @@ def run():
 	global pwm
 	global LEDs_flag
 	global base_speed
+	global ax_os  
+	global ay_os
+	global az_os
 	
 	data_gx,data_gy,data_gz,t=Gyro.get() #degrees/sec
 	data_ax,data_ay,data_az=Accel.get() #in G 	
@@ -239,10 +248,10 @@ def run():
 	#MOTOR_SPEED_RATIO_accel					
 	#MOTOR_SPEED_RATIO_enable_z
 	
-	pwm_br =base_speed+MOTOR_SPEED_RATIO_throttle*THROTTLE+(-MOTOR_SPEED_RATIO_gyro*gx_up-MOTOR_SPEED_RATIO_gyro*gy_up-MOTOR_SPEED_RATIO_gyro*MOTOR_SPEED_RATIO_enable_z*gz_up)  +12*(-MOTOR_SPEED_RATIO_accel*ax_up +MOTOR_SPEED_RATIO_accel* ay_up+MOTOR_SPEED_RATIO_accel*MOTOR_SPEED_RATIO_enable_z* az_up)
-	pwm_bl =base_speed+MOTOR_SPEED_RATIO_throttle*THROTTLE+(-MOTOR_SPEED_RATIO_gyro*gx_up+MOTOR_SPEED_RATIO_gyro*gy_up+MOTOR_SPEED_RATIO_gyro*MOTOR_SPEED_RATIO_enable_z*gz_up)  +12*(+MOTOR_SPEED_RATIO_accel*ax_up +MOTOR_SPEED_RATIO_accel* ay_up+MOTOR_SPEED_RATIO_accel*MOTOR_SPEED_RATIO_enable_z* az_up)
-	pwm_fl =base_speed+MOTOR_SPEED_RATIO_throttle*THROTTLE+(+MOTOR_SPEED_RATIO_gyro*gx_up+MOTOR_SPEED_RATIO_gyro*gy_up-MOTOR_SPEED_RATIO_gyro*MOTOR_SPEED_RATIO_enable_z*gz_up)  +12*(+MOTOR_SPEED_RATIO_accel*ax_up -MOTOR_SPEED_RATIO_accel* ay_up+MOTOR_SPEED_RATIO_accel*MOTOR_SPEED_RATIO_enable_z* az_up)
-	pwm_fr =base_speed+MOTOR_SPEED_RATIO_throttle*THROTTLE+(+MOTOR_SPEED_RATIO_gyro*gx_up-MOTOR_SPEED_RATIO_gyro*gy_up+MOTOR_SPEED_RATIO_gyro*MOTOR_SPEED_RATIO_enable_z*gz_up)  +12*(-MOTOR_SPEED_RATIO_accel*ax_up -MOTOR_SPEED_RATIO_accel* ay_up+MOTOR_SPEED_RATIO_accel*MOTOR_SPEED_RATIO_enable_z* az_up)
+	pwm_br =base_speed+MOTOR_SPEED_RATIO_throttle*THROTTLE+(-MOTOR_SPEED_RATIO_gyro*gx_up-MOTOR_SPEED_RATIO_gyro*gy_up-MOTOR_SPEED_RATIO_gyro*MOTOR_SPEED_RATIO_enable_z*gz_up)  +(-MOTOR_SPEED_RATIO_accel*ax_up +MOTOR_SPEED_RATIO_accel* ay_up+MOTOR_SPEED_RATIO_accel*MOTOR_SPEED_RATIO_enable_z* az_up)
+	pwm_bl =base_speed+MOTOR_SPEED_RATIO_throttle*THROTTLE+(-MOTOR_SPEED_RATIO_gyro*gx_up+MOTOR_SPEED_RATIO_gyro*gy_up+MOTOR_SPEED_RATIO_gyro*MOTOR_SPEED_RATIO_enable_z*gz_up)  +(+MOTOR_SPEED_RATIO_accel*ax_up +MOTOR_SPEED_RATIO_accel* ay_up+MOTOR_SPEED_RATIO_accel*MOTOR_SPEED_RATIO_enable_z* az_up)
+	pwm_fl =base_speed+MOTOR_SPEED_RATIO_throttle*THROTTLE+(+MOTOR_SPEED_RATIO_gyro*gx_up+MOTOR_SPEED_RATIO_gyro*gy_up-MOTOR_SPEED_RATIO_gyro*MOTOR_SPEED_RATIO_enable_z*gz_up)  +(+MOTOR_SPEED_RATIO_accel*ax_up -MOTOR_SPEED_RATIO_accel* ay_up+MOTOR_SPEED_RATIO_accel*MOTOR_SPEED_RATIO_enable_z* az_up)
+	pwm_fr =base_speed+MOTOR_SPEED_RATIO_throttle*THROTTLE+(+MOTOR_SPEED_RATIO_gyro*gx_up-MOTOR_SPEED_RATIO_gyro*gy_up+MOTOR_SPEED_RATIO_gyro*MOTOR_SPEED_RATIO_enable_z*gz_up)  +(-MOTOR_SPEED_RATIO_accel*ax_up -MOTOR_SPEED_RATIO_accel* ay_up+MOTOR_SPEED_RATIO_accel*MOTOR_SPEED_RATIO_enable_z* az_up)
 		
 	#errors
 	br_err=0
@@ -329,6 +338,15 @@ def update_pid(device,param):
 	global MOTOR_SPEED_RATIO_gyro
 	global MOTOR_SPEED_RATIO_accel					
 	global MOTOR_SPEED_RATIO_enable_z
+	
+	global gx_os 
+	global gy_os
+	global gz_os            
+	global ax_os  
+	global ay_os
+	global az_os
+
+
 	menu.restore_stdin()
 	nonnumber=1
 	os.system("clear")
@@ -341,6 +359,13 @@ def update_pid(device,param):
 	print "*"*80
 	print "pid output - motor speed ratios:\n     throttle: {}\n     gyro: {}\n     Accel: {}\n     enable_z: {}".format( MOTOR_SPEED_RATIO_throttle,MOTOR_SPEED_RATIO_gyro, MOTOR_SPEED_RATIO_accel,MOTOR_SPEED_RATIO_enable_z)
 	print "\n"+"*"*80
+	print "OFFSETS"
+	print "\n"+"*"*80
+	print "     GX:{}\n     GY:{}\n     GZ:{}\n     AX:{}\n     AY:{}\n     AZ:{}".format(gx_os,gy_os,gz_os,ax_os,ay_os, az_os)
+	print "\n"+"*"*80
+	
+	
+	
 	if device=="" and param=="":
 		print "Press enter"
 		userinput = sys.stdin.readline().rstrip()
@@ -352,7 +377,7 @@ def update_pid(device,param):
 			print "Enter new value: ",
 			userinput = sys.stdin.readline().rstrip()
 			try:
-				userinpuit=float(userinput)
+				userinput=float(userinput)
 				nonnumber=0
 			except ValueError:
 				print "Error:"+userinput+" is not a number"
@@ -366,6 +391,13 @@ def update_pid(device,param):
 				 pid_P_accel=userinput
 			if param=='d':
 				 pid_D_accel=userinput
+			if param=="xos":
+				ax_os=userinput
+			if param=="yos":
+				ay_os=userinput
+			if param=="zos":
+				az_os=userinput
+
 		elif device=='g':
 			if param=='i':
 				 pid_I_gyro=userinput
@@ -373,6 +405,13 @@ def update_pid(device,param):
 				 pid_P_gyro=userinput
 			if param=='d':
 				 pid_D_gyro=userinput
+			if param=="xos":
+				gx_os=userinput
+			if param=="yos":
+				gy_os=userinput
+			if param=="zos":
+				gz_os=userinput
+
 		elif device=="max speed":
 			MAX_SPEED=userinput
 		elif device=="base speed":
@@ -386,10 +425,93 @@ def update_pid(device,param):
 				MOTOR_SPEED_RATIO_gyro=userinput
 			if param=="accel":
 				MOTOR_SPEED_RATIO_accel=userinput
-			
+	#open
+	configuration=open("user_config/pid.config","w")
+	configuration.write("PIDfile1.0\n")
+	configuration.write("pid_P_accel="+str(pid_P_accel)+"\n")
+	configuration.write("pid_I_accel="+str(pid_I_accel)+"\n")
+	configuration.write("pid_D_accel="+str(pid_D_accel)+"\n")
+	configuration.write("pid_P_gyro="+str(pid_P_gyro)+"\n")
+	configuration.write("pid_I_gyro="+str(pid_I_gyro)+"\n")
+	configuration.write("pid_D_gyro="+str(pid_D_gyro)+"\n")
+	configuration.write("MAX_SPEED="+str(MAX_SPEED)+"\n")
+	configuration.write("base_speed="+str(base_speed)+"\n")
+	configuration.write("MOTOR_SPEED_RATIO_throttle="+str(MOTOR_SPEED_RATIO_throttle)+"\n")
+	configuration.write("MOTOR_SPEED_RATIO_gyro="+str(MOTOR_SPEED_RATIO_gyro)+"\n")
+	configuration.write("MOTOR_SPEED_RATIO_accel="+str(MOTOR_SPEED_RATIO_accel)+"\n")			
+	configuration.write("MOTOR_SPEED_RATIO_enable_z="+str(MOTOR_SPEED_RATIO_enable_z)+"\n")	
+	configuration.write("gx_os=" +str(gx_os)+"\n")
+	configuration.write("gy_os="+str(gy_os)+"\n")
+	configuration.write("gz_os=" +str(gz_os)+"\n")
+	configuration.write("ax_os=" +str(ax_os)+"\n")
+	configuration.write("ay_os="+str(ay_os)+"\n")
+	configuration.write("az_os="+str(az_os)+"\n")
+	configuration.close()
+	
+	
+	
 	os.system("clear")
 	menu.current()
 	return
+def configuration_read():
+	print "Getting user configuration data."
+	global pid_P_accel
+	global pid_I_accel
+	global pid_D_accel
+	global pid_P_gyro
+	global pid_I_gyro
+	global pid_D_gyro
+	global MAX_SPEED
+	global base_speed
+	global MOTOR_SPEED_RATIO_throttle
+	global MOTOR_SPEED_RATIO_gyro
+	global MOTOR_SPEED_RATIO_accel					
+	global MOTOR_SPEED_RATIO_enable_z
+	global gx_os 
+	global gy_os
+	global gz_os            
+	global ax_os  
+	global ay_os
+	global az_os
+
+
+	#read
+	print "Opening user_config/pid.config ..."
+	configuration=open("user_config/pid.config","r")
+	array=[]
+	print "Reading..",
+	error=0
+	for x in range(0,19):
+		print ".",
+		array.append(configuration.readline())
+		print array[x]
+		if array[x]=="":
+			print "\nConfiguration file is corrupted. Check user_config/pid.config or use the tuning utility to recreate the file.\nPID values may not be correct"
+			error=1
+			break
+	
+	if error==0:
+		pid_P_accel=float( array[1][array[1].rstrip().find("=")+1:])
+		pid_I_accel=float( array[2][array[2].rstrip().find("=")+1:])
+		pid_D_accel=float( array[3][array[3].rstrip().find("=")+1:])
+		pid_P_gyro=float( array[4][array[4].rstrip().find("=")+1:])
+		pid_I_gyro=float( array[5][array[5].rstrip().find("=")+1:])
+		pid_D_gyro=float( array[6][array[6].rstrip().find("=")+1:])
+		MAX_SPEED=float( array[7][array[7].rstrip().find("=")+1:])
+		base_speed=float( array[8][array[8].rstrip().find("=")+1:])
+		MOTOR_SPEED_RATIO_throttle=float( array[9][array[9].rstrip().find("=")+1:])
+		MOTOR_SPEED_RATIO_gyro=float( array[10][array[10].rstrip().find("=")+1:])
+		MOTOR_SPEED_RATIO_accel=float( array[11][array[11].rstrip().find("=")+1:])		
+		MOTOR_SPEED_RATIO_enable_z=float( array[12][array[12].rstrip().find("=")+1:])
+		
+		gx_os=float( array[13][array[13].rstrip().find("=")+1:])
+		gy_os=float( array[14][array[14].rstrip().find("=")+1:])
+		gz_os=float( array[15][array[15].rstrip().find("=")+1:])
+		ax_os=float( array[16][array[16].rstrip().find("=")+1:])
+		ay_os=float( array[17][array[17].rstrip().find("=")+1:])
+		az_os=float( array[18][array[18].rstrip().find("=")+1:])
+	configuration.close()
+	print "Closing config"
 	
 def start_motors(delay,speed):
 	print "Restarting ESCs..."
@@ -455,6 +577,7 @@ pwm.init()
 pwm=pwm.PWM()
 time.sleep(1/3)
 signal.signal(signal.SIGINT, signal_handler)
+configuration_read()
 print "Initializing menus"
 init_menus()
 menu.unbuffer_stdin()

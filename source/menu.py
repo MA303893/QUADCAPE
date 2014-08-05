@@ -115,16 +115,18 @@ class submenu:
 		self.USE_BANNER=1
 		self.IDLE_FUNCTION=0
 		self.ONCE_FUNCTION=0
+		self.NO_RETURN_AFTER_KEY=0
 		#############################################
 		self.title=title_in
 		self.items=items_in
 		self.functions=functions_in
 		self.keys=keys_in
+		self.RETURN_KEY=0
 		for x in range(0,len(self.keys)):
 			self.keys[x]=self.keys[x].lower()
 
 	def display(self):
-		submenu.menu_array.append(self)
+		
 		submenu.depth+=1
 		index = 1
 		while index < len(submenu.menu_array):    
@@ -132,12 +134,13 @@ class submenu:
 				submenu.menu_array.pop(index)
 				index -= 1  
     			index += 1
+    		submenu.menu_array.append(self)
 		print submenu.menu_array
 		noresponse=1
 		if self.ONCE_FUNCTION!=0:
 			self.ONCE_FUNCTION()
 		self.refresh(1)
-		while noresponse==1:
+		while noresponse>0:
 			if self.IDLE_FUNCTION!=0:
 				self.IDLE_FUNCTION()
 			if kbhit.kbhit()>0:
@@ -147,17 +150,20 @@ class submenu:
 						if char==self.keys[x]:
 							if self.functions[x]:
 								self.functions[x]()
-							noresponse=0
+							noresponse=0 +self.NO_RETURN_AFTER_KEY-self.RETURN_KEY
 						#if the key is not found but we have a wild card, call teh function
 						elif self.keys[x]=='*':
 							if self.functions[x]:
 								self.functions[x]()
-							noresponse=0				
+							noresponse=0 +self.NO_RETURN_AFTER_KEY-self.RETURN_KEY				
 			#now that keypress has been evaluated, refresh if proper flags are set
 			self.refresh()
-		submenu.menu_array.pop()
+		if len(submenu.menu_array)>0:
+			submenu.menu_array.pop()
 		submenu.depth-=1
-		
+		self.RETURN_KEY=0
+	def ret(self):
+		self.RETURN_KEY=1
 	def refresh(self,force=0):
 		if force==1:
 			try:

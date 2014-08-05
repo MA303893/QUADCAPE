@@ -1,0 +1,13 @@
+PIDfile1.0
+pid_P_accel=35
+pid_I_accel=30
+pid_D_accel=1
+pid_P_gyro=99
+pid_I_gyro=40
+pid_D_gyro=10
+MAX_SPEED=800
+base_speed=150
+MOTOR_SPEED_RATIO_throttle=.5
+MOTOR_SPEED_RATIO_gyro=.0002
+MOTOR_SPEED_RATIO_accel=6			
+MOTOR_SPEED_RATIO_enable_z=0
