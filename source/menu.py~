@@ -158,7 +158,8 @@ class submenu:
 							noresponse=0 +self.NO_RETURN_AFTER_KEY-self.RETURN_KEY				
 			#now that keypress has been evaluated, refresh if proper flags are set
 			self.refresh()
-		submenu.menu_array.pop()
+		if len(submenu.menu_array)>0:
+			submenu.menu_array.pop()
 		submenu.depth-=1
 		self.RETURN_KEY=0
 	def ret(self):

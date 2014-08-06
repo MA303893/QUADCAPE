@@ -137,9 +137,10 @@ class submenu:
     		submenu.menu_array.append(self)
 		print submenu.menu_array
 		noresponse=1
+		self.refresh(1)
 		if self.ONCE_FUNCTION!=0:
 			self.ONCE_FUNCTION()
-		self.refresh(1)
+		
 		while noresponse>0:
 			if self.IDLE_FUNCTION!=0:
 				self.IDLE_FUNCTION()

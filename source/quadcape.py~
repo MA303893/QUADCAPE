@@ -21,7 +21,8 @@ import sys
 import signal 
 import pwm
 import menu
-
+import LPfilter
+import kbhit
 """
 import os, sys, inspect
 # realpath() will make your script run, even if you symlink it :)
@@ -76,10 +77,11 @@ MOTOR_SPEED_RATIO_gyro=0
 MOTOR_SPEED_RATIO_accel=6					
 MOTOR_SPEED_RATIO_enable_z=0
 base_speed=150
-MAX_SPEED=800
+MAX_SPEED=1200
+LP_numPoints = 1
 #####################################################################################
 
- 
+
 #####################MENUS#####################################################
 welcome_menu	=0
 main_menu=0
@@ -107,10 +109,30 @@ def init_menus():
 	tuning_menu=menu.submenu("TUNING",menu_list,menu_functions,["1","2","3","4","5","6","7","8","t","b","e","m","0","a","s","d","f","y","u","i","o","p","["])
 	tuning_menu.IDLE_FUNCTION=idle_tuning
 	tuning_menu.USE_BANNER=0
+	
+	
+	
+	#menu_functions=[2tuning_menu_f1,2tuning_menu_f2,2tuning_menu_f3,2tuning_menu_f4,2tuning_menu_f5,2tuning_menu_f6,lambda: 2update_pid("Max speed",""),lambda: 2update_pid("base speed",""),0,0,f_exit,0,lambda: 2update_pid("",""),lambda: 2update_pid("ratio","throttle"),lambda: 2update_pid("ratio","enable_z"),lambda: 2update_pid("ratio","gyro"),lambda: 2update_pid("ratio","accel"),lambda: 2update_pid("g","xos"),lambda: 2update_pid("g","yos"),lambda: 2update_pid("g","zos"),lambda: 2update_pid("a","xos"),lambda: 2update_pid("a","yos"),lambda: 2update_pid("a","zos")]
+	
+	#tuning_menu=menu.submenu("TUNING second axis",menu_list,menu_functions,["1","2","3","4","5","6","7","8","t","b","e","m","0","a","s","d","f","y","u","i","o","p","["])
+	#tuning_menu.IDLE_FUNCTION=idle_tuning
+	#tuning_menu.USE_BANNER=0
+	
+	
+	
+	
+	
+	
+	
 	#tuning test
-	test_tuning_menu=menu.submenu("Test Tuning with current PID values",["Throttle: +10 press 5","          +1  press t","          -1  press g","          -10 press b","back: press SPACE"],[throttlepp,throttlep,throttlem,throttlemm,test_tuning_back],["5","t","g","b"," "])
-	test_tuning_menu.ONCE_FUNCTION=lambda: start_motors(.1,base_speed)
-	test_tuning_menu.IDLE_FUNCTION=run
+	test_tuning_menu=menu.submenu("Test Tuning with current PID values",["Throttle: +10 press 5","          +1  press t","          -1  press g","          -10 press v","Use arrow keys to move and '/' to center","back: press SPACE"],[throttlepp,throttlep,throttlem,throttlemm,test_tuning_back,lambda: pitch_roll("f"),lambda: pitch_roll("b"),lambda: pitch_roll("r"),lambda: pitch_roll("l"),lambda: pitch_roll("z")],["5","t","g","v"," ","a","b","c","d","/"])
+	#test_tuning_menu.ONCE_FUNCTION=lambda: start_motors(.1,base_speed)
+	#test_tuning_menu.IDLE_FUNCTION=run
+	
+	test_tuning_menu.ONCE_FUNCTION=f_tuning_run
+	test_tuning_menu.IDLE_FUNCTION=0
+	
+	
 	test_tuning_menu.USE_BANNER=0
 	test_tuning_menu.PRINT_ON_REFRESH=0
 	test_tuning_menu.CLEAR_ON_REFRESH=0
@@ -124,10 +146,67 @@ def tuning_menu_f3()  : update_pid("g","d")
 def tuning_menu_f4()  : update_pid("a","p")
 def tuning_menu_f5()  : update_pid("a","i")
 def tuning_menu_f6()  : update_pid("a","d")
+"""
+def 2tuning_menu_f1()  : 2update_pid("g","p")
+def 2tuning_menu_f2()  : 2update_pid("g","i")
+def 2tuning_menu_f3()  : 2update_pid("g","d")
+def 2tuning_menu_f4()  : 2update_pid("a","p")
+def 2tuning_menu_f5()  : 2update_pid("a","i")
+def 2tuning_menu_f6()  : 2update_pid("a","d")
+
+"""
 def test_tuning_back():
+	"""
+	global THROTTLE
+	global ax_os_throttle
+	global ay_os_throttle
+	
 	start_motors(0,0)
+	print "Throttle is : {}".format(THROTTLE)
+	print "X offset (LR) is : {}\nY offset (UD) is : {}".format(ax_os_throttle,ay_os_throttle)
+	ax_os_throttle=0
+	ay_os_throttle=0
 	THROTTLE=0
+	"""
 	test_tuning_menu.ret()
+def pitch_roll(str):
+	#f,b,l,r,z
+	global ax_os_throttle
+	global ay_os_throttle
+	if str=="z":
+		ax_os_throttle=0
+		ay_os_throttle=0
+	elif str=="f":
+		ay_os_throttle-=.05
+	elif str=="b":
+		ay_os_throttle+=.05	
+	elif str=="r":
+		ax_os_throttle-=.05
+	elif str=="l":
+		ax_os_throttle+=.05			
+def f_tuning_run():
+	global LEDs_flag
+	global THROTTLE
+	global ax_os_throttle
+	global ay_os_throttle
+	global yaw_throttle
+	global update_counter
+	start_motors(.2,base_speed)
+	LEDs_flag=1
+	while LEDs_flag==1:
+		tune_run()
+	start_motors(0,0)
+	print "Throttle is : {}".format(THROTTLE)
+	print "X offset (LR) is : {}\nY offset (UD) is : {}".format(ax_os_throttle,ay_os_throttle)
+	print "Yaw is {}".format(yaw_throttle)
+	print "Updated {} times in {} seconds, {} per sec".format(update_counter, 0,0)
+	ax_os_throttle=0
+	ay_os_throttle=0
+	THROTTLE=0
+	yaw_throttle=0
+	print "\nPress space again"
+
+
 def throttlepp() : 
 	global THROTTLE
 	THROTTLE+=10
@@ -140,11 +219,21 @@ def throttlem () :
 def throttlemm() :  
 	global THROTTLE
 	THROTTLE-=10
-
+def yaw(str):
+	global yaw_throttle
+	if str=="+":
+		yaw_throttle+=1
+	else:
+		yaw_throttle-=1
+		
 def tuning():
 	test_tuning_menu.display()
 	
 def f_exit():
+	pwm.changeSpeed1(0)
+	pwm.changeSpeed2(0)
+	pwm.changeSpeed3(0)
+	pwm.changeSpeed4(0)
 	menu.restore_stdin()
 	print "User exit.\nRestoring stdin\nThank you for using Quadcape."
 	exit()
@@ -177,6 +266,15 @@ def idle_tuning():
 	global data_ax
 	global data_ay
 	global data_az
+		
+	global lp_data_gx
+	global lp_data_gy
+	global lp_data_gz
+	global lp_Gyro
+	global lp_data_ax
+	global lp_data_ay
+	global lp_data_az
+	
 	global Accel
 	global gx_os
 	global gy_os
@@ -196,13 +294,162 @@ def idle_tuning():
 	
 	data_gx,data_gy,data_gz,t=Gyro.get() #degrees/sec
 	data_ax,data_ay,data_az=Accel.get() #in G 
+	
+	
 	data_gx,data_gy,data_gz=data_gx+gx_os,data_gy+gy_os,data_gz+gz_os
-	data_ax,data_ay,data_az=data_ax+ax_os,data_ay+ay_os,data_az+az_os
+	data_ax,data_ay,data_az=data_ax+ax_os+ax_os_throttle,data_ay+ay_os+ay_os_throttle,data_az+az_os
+	
+	data_gx = lp_data_gx.filter( data_gx)
+	data_gy = lp_data_gy.filter( data_gy)
+	data_gz = lp_data_gz.filter( data_gz)
+	data_ax = lp_data_ax.filter( data_ax)
+	data_ay = lp_data_ay.filter( data_ay)
+	data_az = lp_data_az.filter( data_az)
+
 	print "Accel:X:{} \n     Y:{} \n     Z:{} \nGyro: X:{} \n     Y:{} \n     Z:{}".format(data_ax,data_ay,data_az,data_gx,data_gy,data_gz)
-	time.sleep(.1)
+	time.sleep(.2)
 	return #idle_tuning
 
 #run will update the controllers and send the data to the pwms once. 
+
+
+def tune_run():
+	global data_gx
+	global data_gy
+	global data_gz
+	global Gyro
+	global data_ax
+	global data_ay
+	global data_az
+	global Accel
+	global gx_os
+	global gy_os
+	global data_gz
+	global gz_os
+	global THROTTLE
+	global pid_P_accel
+	global pid_I_accel
+	global pid_D_accel
+	global pid_P_gyro
+	global pid_I_gyro
+	global pid_D_gyro
+	global pwm
+	global LEDs_flag
+	global base_speed
+	global ax_os  
+	global ay_os
+	global az_os
+	global update_counter
+	global lp_data_gx
+	global lp_data_gy
+	global lp_data_gz
+	global lp_Gyro
+	global lp_data_ax
+	global lp_data_ay
+	global lp_data_az
+
+	if kbhit.kbhit()>0:
+		char=kbhit.getch().lower()	
+		if char=="5":
+			throttlepp()
+		elif char=="v":
+			throttlemm()
+		elif char=="a":
+			pitch_roll("f")
+		elif char=="b":
+			pitch_roll("b")
+		elif char=="c":
+			pitch_roll("r")
+		elif char=="d":
+			pitch_roll("l")
+		elif char=="/":
+			pitch_roll("z")
+		elif char=="=":
+			yaw("+")
+		elif char=="-":
+			yaw("-")
+		elif char==" ":
+			LEDs_flag=0
+	
+
+	data_gx,data_gy,data_gz,t=Gyro.get() #degrees/sec
+	data_ax,data_ay,data_az=Accel.get() #in G 	
+	data_gx,data_gy,data_gz=data_gx+gx_os,data_gy+gy_os,data_gz+gz_os+yaw_throttle
+	data_ax,data_ay,data_az=data_ax+ax_os+ax_os_throttle,data_ay+ay_os+ay_os_throttle,data_az+az_os
+	
+	data_gx = lp_data_gx.filter( data_gx)
+	data_gy = lp_data_gy.filter( data_gy)
+	data_gz = lp_data_gz.filter( data_gz)
+	data_ax = lp_data_ax.filter( data_ax)
+	data_ay = lp_data_ay.filter( data_ay)
+	data_az = lp_data_az.filter( data_az)
+	
+	gx_up=gx.update(data_gx)
+	gy_up=gy.update(data_gy)
+	gz_up=gz.update(data_gz)
+	ax_up=ax.update(data_ax)
+	ay_up=ay.update(data_ay)
+	az_up=az.update(data_az)
+	
+	#decide ratios
+	#MOTOR_SPEED_RATIO_throttle
+	#MOTOR_SPEED_RATIO_gyro
+	#MOTOR_SPEED_RATIO_accel					
+	#MOTOR_SPEED_RATIO_enable_z
+	new_base=base_speed+MOTOR_SPEED_RATIO_throttle*THROTTLE
+	new_gx=MOTOR_SPEED_RATIO_gyro*gx_up
+	new_gy=MOTOR_SPEED_RATIO_gyro*gy_up
+	new_gz=MOTOR_SPEED_RATIO_gyro*MOTOR_SPEED_RATIO_enable_z*gz_up
+	new_ax=MOTOR_SPEED_RATIO_accel*ax_up
+	new_ay=MOTOR_SPEED_RATIO_accel* ay_up
+	#new_az=0*MOTOR_SPEED_RATIO_accel*MOTOR_SPEED_RATIO_enable_z* az_up
+	
+	pwm_br =new_base+(-new_gx-new_gy-new_gz)  +(-new_ax +new_ay)
+	pwm_bl =new_base+(-new_gx+new_gy+new_gz)  +(+new_ax +new_ay)
+	pwm_fl =new_base+(+new_gx+new_gy-new_gz)  +(+new_ax -new_ay)+17
+	pwm_fr =new_base+(+new_gx-new_gy+new_gz)  +(-new_ax -new_ay)+30
+	
+	"""
+	#errors
+	br_err=0
+	bl_err = 0
+	fl_err =0 
+	fr_err = 0 
+	
+	
+	if pwm_br>MAX_SPEED:
+		br_err=1
+		pwm_br=MAX_SPEED
+	if pwm_bl>MAX_SPEED:
+		bl_err = 1						
+		pwm_bl=MAX_SPEED
+	if pwm_fl>MAX_SPEED:
+		fl_err =1 
+		pwm_fl=MAX_SPEED
+	if pwm_fr>MAX_SPEED:
+		fr_err = 1 
+		pwm_fr=MAX_SPEED
+	"""
+	update_counter+=1
+	
+	#update motors` 
+	#P8_13 PWM Back Right	PWM1	
+	#P8_19 PWM Front RIght	PWM2
+	#P9_14 PWM Back Left	PWM3
+	#P9_16 PWM Front Left	PWM4
+	pwm.changeSpeed1(pwm_br)
+	pwm.changeSpeed2(pwm_fr)
+	pwm.changeSpeed3(pwm_bl)
+	pwm.changeSpeed4(pwm_fl)
+	"""
+	if LEDs_flag==0:
+		led.back("0000")
+		LEDs_flag=1 
+	else:
+		led.back("1111")
+		LEDs_flag=0	
+	"""
+
 def run():
 	global data_gx
 	global data_gy
@@ -229,11 +476,25 @@ def run():
 	global ax_os  
 	global ay_os
 	global az_os
-	
+	global lp_data_gx
+	global lp_data_gy
+	global lp_data_gz
+	global lp_Gyro
+	global lp_data_ax
+	global lp_data_ay
+	global lp_data_az
+		
 	data_gx,data_gy,data_gz,t=Gyro.get() #degrees/sec
 	data_ax,data_ay,data_az=Accel.get() #in G 	
 	data_gx,data_gy,data_gz=data_gx+gx_os,data_gy+gy_os,data_gz+gz_os
-	data_ax,data_ay,data_az=data_ax+ax_os,data_ay+ay_os,data_az+az_os
+	data_ax,data_ay,data_az=data_ax+ax_os+ax_os_throttle,data_ay+ay_os+ay_os_throttle,data_az+az_os
+	
+	data_gx = lp_data_gx.filter( data_gx)
+	data_gy = lp_data_gy.filter( data_gy)
+	data_gz = lp_data_gz.filter( data_gz)
+	data_ax = lp_data_ax.filter( data_ax)
+	data_ay = lp_data_ay.filter( data_ay)
+	data_az = lp_data_az.filter( data_az)
 	
 	gx_up=gx.update(data_gx)
 	gy_up=gy.update(data_gy)
@@ -247,19 +508,27 @@ def run():
 	#MOTOR_SPEED_RATIO_gyro
 	#MOTOR_SPEED_RATIO_accel					
 	#MOTOR_SPEED_RATIO_enable_z
+	new_base=base_speed+MOTOR_SPEED_RATIO_throttle*THROTTLE
+	new_gx=MOTOR_SPEED_RATIO_gyro*gx_up
+	new_gy=MOTOR_SPEED_RATIO_gyro*gy_up
+	new_gz=MOTOR_SPEED_RATIO_gyro*MOTOR_SPEED_RATIO_enable_z*gz_up
+	new_ax=MOTOR_SPEED_RATIO_accel*ax_up
+	new_ay=MOTOR_SPEED_RATIO_accel* ay_up
+	new_az=0*MOTOR_SPEED_RATIO_accel*MOTOR_SPEED_RATIO_enable_z* az_up
 	
-	pwm_br =base_speed+MOTOR_SPEED_RATIO_throttle*THROTTLE+(-MOTOR_SPEED_RATIO_gyro*gx_up-MOTOR_SPEED_RATIO_gyro*gy_up-MOTOR_SPEED_RATIO_gyro*MOTOR_SPEED_RATIO_enable_z*gz_up)  +(-MOTOR_SPEED_RATIO_accel*ax_up +MOTOR_SPEED_RATIO_accel* ay_up+MOTOR_SPEED_RATIO_accel*MOTOR_SPEED_RATIO_enable_z* az_up)
-	pwm_bl =base_speed+MOTOR_SPEED_RATIO_throttle*THROTTLE+(-MOTOR_SPEED_RATIO_gyro*gx_up+MOTOR_SPEED_RATIO_gyro*gy_up+MOTOR_SPEED_RATIO_gyro*MOTOR_SPEED_RATIO_enable_z*gz_up)  +(+MOTOR_SPEED_RATIO_accel*ax_up +MOTOR_SPEED_RATIO_accel* ay_up+MOTOR_SPEED_RATIO_accel*MOTOR_SPEED_RATIO_enable_z* az_up)
-	pwm_fl =base_speed+MOTOR_SPEED_RATIO_throttle*THROTTLE+(+MOTOR_SPEED_RATIO_gyro*gx_up+MOTOR_SPEED_RATIO_gyro*gy_up-MOTOR_SPEED_RATIO_gyro*MOTOR_SPEED_RATIO_enable_z*gz_up)  +(+MOTOR_SPEED_RATIO_accel*ax_up -MOTOR_SPEED_RATIO_accel* ay_up+MOTOR_SPEED_RATIO_accel*MOTOR_SPEED_RATIO_enable_z* az_up)
-	pwm_fr =base_speed+MOTOR_SPEED_RATIO_throttle*THROTTLE+(+MOTOR_SPEED_RATIO_gyro*gx_up-MOTOR_SPEED_RATIO_gyro*gy_up+MOTOR_SPEED_RATIO_gyro*MOTOR_SPEED_RATIO_enable_z*gz_up)  +(-MOTOR_SPEED_RATIO_accel*ax_up -MOTOR_SPEED_RATIO_accel* ay_up+MOTOR_SPEED_RATIO_accel*MOTOR_SPEED_RATIO_enable_z* az_up)
-		
+	pwm_br =new_base+(-new_gx-new_gy-new_gz)  +(-new_ax +new_ay+new_az)
+	pwm_bl =new_base+(-new_gx+new_gy+new_gz)  +(+new_ax +new_ay+new_az)
+	pwm_fl =new_base+(+new_gx+new_gy-new_gz)  +(+new_ax -new_ay+new_az)
+	pwm_fr =new_base+(+new_gx-new_gy+new_gz)  +(-new_ax -new_ay+new_az)
+	
+	"""
 	#errors
 	br_err=0
 	bl_err = 0
 	fl_err =0 
 	fr_err = 0 
 	
-		
+	
 	if pwm_br>MAX_SPEED:
 		br_err=1
 		pwm_br=MAX_SPEED
@@ -272,7 +541,7 @@ def run():
 	if pwm_fr>MAX_SPEED:
 		fr_err = 1 
 		pwm_fr=MAX_SPEED
-	
+	"""
 	
 	
 	#update motors` 
@@ -323,7 +592,8 @@ def update_set_points():
 
 
 
-
+#def update_pid(device,param):
+#	return
 
 def update_pid(device,param):
 	global pid_P_accel
@@ -339,14 +609,27 @@ def update_pid(device,param):
 	global MOTOR_SPEED_RATIO_accel					
 	global MOTOR_SPEED_RATIO_enable_z
 	
-	global gx_os 
+	global gx
+	global gy
+	global gz
+	global ax
+	global ay
+	global az
+	
+	
+	
+	
+	global gx_os
 	global gy_os
-	global gz_os            
+	global gz_os
 	global ax_os  
 	global ay_os
 	global az_os
-
-
+	
+	
+	
+	
+	
 	menu.restore_stdin()
 	nonnumber=1
 	os.system("clear")
@@ -448,7 +731,24 @@ def update_pid(device,param):
 	configuration.write("az_os="+str(az_os)+"\n")
 	configuration.close()
 	
-	
+	gx.setKp(pid_P_gyro)
+	gy.setKp(pid_P_gyro)
+	gz.setKp(pid_P_gyro)
+	ax.setKp(pid_P_accel)
+	ay.setKp(pid_P_accel)
+	az.setKp(pid_P_accel)
+	gx.setKi(pid_I_gyro)
+	gy.setKi(pid_I_gyro)
+	gz.setKi(pid_I_gyro)
+	ax.setKi(pid_I_accel)
+	ay.setKi(pid_I_accel)
+	az.setKi(pid_I_accel)
+	gx.setKd(pid_D_gyro)
+	gy.setKd(pid_D_gyro)
+	gz.setKd(pid_D_gyro)
+	ax.setKd(pid_D_accel)
+	ay.setKd(pid_D_accel)
+	az.setKd(pid_D_accel)
 	
 	os.system("clear")
 	menu.current()
@@ -514,28 +814,32 @@ def configuration_read():
 	print "Closing config"
 	
 def start_motors(delay,speed):
-	print "Restarting ESCs..."
+	if speed==0:
+		print "Stopping ESCs..."
+	else:
+		print "Restarting ESCs..."
 	pwm.changeSpeed1(0)
 	pwm.changeSpeed2(0)
 	pwm.changeSpeed3(0)
 	pwm.changeSpeed4(0)
 	print "All motors off."
-	time.sleep(1)
-	print "Starting with delay for current balance"
-	time.sleep(delay)
-	print "INITIALIZING: Motor 1, Back right"
-	pwm.changeSpeed1(int)
-	time.sleep(delay)
-	print "INITIALIZING: Motor 2, Front right"
-	pwm.changeSpeed2(speed)
-	time.sleep(delay)
-	print "INITIALIZING: Motor 3, Front left"
-	time.sleep(delay)	
-	pwm.changeSpeed4(speed)
-	print "INITIALIZING: Motor 4, Back left"
-	pwm.changeSpeed3(speed)
-	time.sleep(delay)	
-	print "All motors initialized"
+	if speed!=0:
+		time.sleep(1)
+		print "Starting with delay for current balance"
+		time.sleep(delay)
+		print "INITIALIZING: Motor 1, Back right"
+		pwm.changeSpeed1(int)
+		time.sleep(delay)
+		print "INITIALIZING: Motor 2, Front right"
+		pwm.changeSpeed2(speed)
+		time.sleep(delay)
+		print "INITIALIZING: Motor 3, Front left"
+		time.sleep(delay)	
+		pwm.changeSpeed4(speed)
+		print "INITIALIZING: Motor 4, Back left"
+		pwm.changeSpeed3(speed)
+		time.sleep(delay)	
+		print "All motors initialized"
 				
 
 ####################################################################
@@ -544,7 +848,7 @@ def signal_handler(signal,frame):
 	print "Caught ^C \n"+"Restoring stdin"
 	menu.restore_stdin()
 	exit(0)
-	
+update_counter=0	
 	
 #devices
 print "Done importing"
@@ -554,6 +858,21 @@ time.sleep(1/6)
 print "Initializing gyroscope"
 Gyro=i2c.gyro()
 time.sleep(1/6)
+
+data_gx,data_gy,data_gz,t=Gyro.get() #degrees/sec
+data_ax,data_ay,data_az=Accel.get() #in G 
+	
+lp_data_gx = LPfilter.LPfilter(LP_numPoints, data_gx)
+lp_data_gy = LPfilter.LPfilter(LP_numPoints, data_gy)
+lp_data_gz = LPfilter.LPfilter(LP_numPoints, data_gz)
+lp_data_ax = LPfilter.LPfilter(LP_numPoints, data_ax)
+lp_data_ay = LPfilter.LPfilter(LP_numPoints, data_ay)
+lp_data_az = LPfilter.LPfilter(LP_numPoints, data_az)
+ax_os_throttle=0
+ay_os_throttle=0
+ 
+ 
+ 
 print "Initializing pid controllers"
 gx=pid.PID(pid_P_gyro,pid_I_gyro,pid_D_gyro)
 gy=pid.PID(pid_P_gyro,pid_I_gyro,pid_D_gyro)
@@ -567,6 +886,7 @@ gz.setPoint(gz_sp)
 ax.setPoint(ax_sp)
 ax.setPoint(ax_sp)
 ax.setPoint(ax_sp)
+yaw_throttle=0
 
 print "Initializing LEDS"
 led.init()
